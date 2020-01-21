@@ -15,9 +15,10 @@
 
 #include "unit-test.h"
 #include "modbus_FRTU_DI.h"
+#include "modbus_FRTU_AI.h"
 
 
-DI_HARDWARE_POINT_ADDRESSES DI_HPA_Data;
+AI_HARDWARE_POINT_ADDRESSES AI_HPA_Data;
 
 const int EXCEPTION_RC = 2;
 
@@ -123,34 +124,34 @@ int main(int argc, char *argv[])
     /** HOLDING REGISTERS **/
 
 
-	memcpy(DI_HPA_Data.HPA_DI_Whole_Channel, DI_FRTU_PART1_REGISTERS_TAB,160);
+	memcpy(AI_HPA_Data.HPA_AI_Whole_Channel, AI_FRTU_PART1_REGISTERS_TAB,160);
 
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.CASDU1 = 0x01;
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.CASDU2 = 0x00;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.CASDU1 = 0x01;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.CASDU2 = 0x00;
 
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[1].HPA.CASDU1 = 0x02;
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[1].HPA.CASDU2 = 0x00;
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.IOA1 = 0x02;
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.IOA2 = 0x00;
-	DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.IOA3 = 0x00;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[1].HPA.CASDU1 = 0x02;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[1].HPA.CASDU2 = 0x00;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.IOA1 = 0x02;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.IOA2 = 0x00;
+	AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.IOA3 = 0x00;
 
 
-	printf("%d\n",DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.CASDU1);
-	printf("%d\n",DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.CASDU2);
+	printf("%d\n",AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.CASDU1);
+	printf("%d\n",AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.CASDU2);
 
-	printf("%d\n",DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.IOA1);
-	printf("%d\n",DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.IOA2);
-	printf("%d\n",DI_HPA_Data.HPA_whole.HPA_DI_Per_Channel[0].HPA.IOA3);
+	printf("%d\n",AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.IOA1);
+	printf("%d\n",AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.IOA2);
+	printf("%d\n",AI_HPA_Data.HPA_whole.HPA_AI_Per_Channel[0].HPA.IOA3);
 
 
     /* Many registers */
-    printf("1/4 FRTU_DI_write_registers: ");
-    rc = modbus_write_registers(ctx, DI_FRTU_PART1_REGISTERS_ADDRESS,
-DI_FRTU_PART1_REGISTERS_NB, DI_HPA_Data.HPA_DI_Whole_Channel
+    printf("1/4 FRTU_AI_write_registers: ");
+    rc = modbus_write_registers(ctx, AI_FRTU_PART1_REGISTERS_ADDRESS,
+AI_FRTU_PART1_REGISTERS_NB, AI_HPA_Data.HPA_AI_Whole_Channel
 /*DI_FRTU_PART1_REGISTERS_TAB*/);
     
     //ASSERT_TRUE(rc == DI_FRTU_PART1_REGISTERS_NB, "");
-    
+    /*
     printf("2/4 FRTU_DI_write_registers: ");
     rc = modbus_write_registers(ctx, DI_FRTU_PART2_REGISTERS_ADDRESS,
                                 DI_FRTU_PART2_REGISTERS_NB, DI_FRTU_PART2_REGISTERS_TAB);
@@ -169,7 +170,7 @@ DI_FRTU_PART1_REGISTERS_NB, DI_HPA_Data.HPA_DI_Whole_Channel
     
    // ASSERT_TRUE(rc == DI_FRTU_PART4_REGISTERS_NB, "");
     /* End of many registers */
-
+*/
     modbus_close(ctx);
     modbus_free(ctx);
     ctx = NULL;
