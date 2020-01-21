@@ -21,10 +21,16 @@
 # endif
 #endif
 
+
 #define AI_NO_OF_CHANNELS 8
 #define AI_NO_OF_HAP 22
 #define AI_NO_OF_HAP_BYTES AI_NO_OF_HAP*AI_NO_OF_CHANNELS
 
+#define AI_NO_OF_DIAGNOSIS_CARD 12
+#define AI_NO_OF_DIAGNOSIS_DATA 3 
+#define AI_NO_OF_DIAGNOSIS_WORDBYTE AI_NO_OF_DIAGNOSIS_CARD*AI_NO_OF_DIAGNOSIS_DATA
+
+//DO NOT CHANGE 
 typedef union
 {	
 	struct
@@ -38,6 +44,7 @@ typedef union
 		
 }AI_Bits_Allocation;
 
+//DO NOT CHANGE 
 typedef union
 {	
 	struct
@@ -52,26 +59,24 @@ typedef union
 	float AI_Float_Byte;	
 }AI_Float_Byte_Allocation;
 
-
+//DO NOT CHANGE 
 typedef union
 {	
 	struct
 	{
-
-		int8_t fourth_Byte:8; 
-		int8_t third_Byte:8;
         	int8_t second_Byte:8; 
 		int8_t first_Byte:8;
-
+		int8_t fourth_Byte:8; 
+		int8_t third_Byte:8;
 		
 	}Bytes;
 	
 	uint32_t AI_Long_Byte;	
 }AI_Long_Byte_Allocation;
 
-//AI_Float_Byte_Allocation AI_Thresold_Additive;
 
 void floatToLong_Swaped_Float(AI_Long_Byte_Allocation *AI_Long,AI_Float_Byte_Allocation *AI_Float);
+void LongTofloat_Swaped_Float(AI_Long_Byte_Allocation *AI_Long,AI_Float_Byte_Allocation *AI_Float);
 
 
 typedef union
@@ -105,7 +110,7 @@ typedef union
 		AI_Long_Byte_Allocation ZERO_RANGE_YZ;
 		
 	} HPA;
-	uint16_t HPA_AI_Per_Channel[AI_NO_OF_HAP];
+	uint16_t HPA_AI_Per_Channel[AI_NO_OF_HAP/*22*/];
 } AI_HARDWARE_POINT_PER_CHANNEL_ADDRESSES ;
 
 
@@ -113,12 +118,39 @@ typedef union
 {
 	struct
 	{
-		AI_HARDWARE_POINT_PER_CHANNEL_ADDRESSES HPA_AI_Per_Channel[AI_NO_OF_CHANNELS];
+		AI_HARDWARE_POINT_PER_CHANNEL_ADDRESSES HPA_AI_Per_Channel[AI_NO_OF_CHANNELS/*8*/];
 	} HPA_whole;
-	uint16_t HPA_AI_Whole_Channel[AI_NO_OF_HAP_BYTES];
+	uint16_t HPA_AI_Whole_Channel[AI_NO_OF_HAP_BYTES/*22x8*/];
 	
 } AI_HARDWARE_POINT_ADDRESSES ;
 
+
+
+typedef union
+{
+	struct
+	{
+		uint8_t CASDU2;	//LSB
+		uint8_t CASDU1;	//MSB			
+
+		uint8_t IOA2;	//LSB
+		uint8_t IOA1;	//MSB					
+
+		uint8_t TI;	//LSB
+		uint8_t IOA3;	//MSB		
+
+	} DIAGNOSIS_BYTES;
+	uint16_t DIAGNOSIS_AI_Per_Card[AI_NO_OF_DIAGNOSIS_DATA/*3*/];
+} AI_DIAGNOSIS_POINT_PER_CARD_ADDRESSES ;
+
+typedef union
+{
+	struct
+	{
+		AI_DIAGNOSIS_POINT_PER_CARD_ADDRESSES DIAGNOSIS_AI_Per_Card[AI_NO_OF_DIAGNOSIS_CARD/*12*/];
+	} Diagnosis_whole;
+	uint16_t DIAGNOSIS_AI_Whole_Card[AI_NO_OF_DIAGNOSIS_WORDBYTE/*12x3=36*/];
+} AI_DIAGNOSIS_POINT_ADDRESSES ;
 
 
 void floatToLong_Swaped_Float(AI_Long_Byte_Allocation *AI_Long,AI_Float_Byte_Allocation *AI_Float)
@@ -130,8 +162,17 @@ void floatToLong_Swaped_Float(AI_Long_Byte_Allocation *AI_Long,AI_Float_Byte_All
 
 }
 
+void LongTofloat_Swaped_Float(AI_Long_Byte_Allocation *AI_Long,AI_Float_Byte_Allocation *AI_Float)
+{
+     AI_Float->Bytes.first_Byte = AI_Long->Bytes.first_Byte;
+    AI_Float->Bytes.second_Byte = AI_Long->Bytes.second_Byte;
+    AI_Float->Bytes.third_Byte = AI_Long->Bytes.third_Byte;
+    AI_Float->Bytes.fourth_Byte = AI_Long->Bytes.fourth_Byte;
 
-//extern DI_HARDWARE_POINT_PER_CHANNEL_ADDRESSES DI_HPA_Data[16];
+}
+
 extern AI_HARDWARE_POINT_ADDRESSES AI_HPA_Data;
+extern AI_DIAGNOSIS_POINT_ADDRESSES AI_DIAGNOSIS_Per_Card;
+
 
 
