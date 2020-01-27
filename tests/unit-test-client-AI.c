@@ -16,6 +16,7 @@
 #include "unit-test.h"
 
 #include "modbus_FRTU_AI.h"
+"
 
 #define BYTEperWORD 2
 AI_HARDWARE_POINT_ADDRESSES AI_HPA_Data;
