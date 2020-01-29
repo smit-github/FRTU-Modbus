@@ -15,6 +15,8 @@ typedef char * string;
 
 extern char InputFile_whole[50];
 
+
+
 typedef struct{
 	char Name[16][50];
 	uint8_t CASDU1[16];

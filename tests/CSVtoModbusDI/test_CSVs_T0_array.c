@@ -246,24 +246,30 @@ int extract_Diagnostic_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOMDia
 			string_to_compare = malloc(snprintf(NULL,0,"SW-")+1);
 			sprintf(string_to_compare,"SW-");
 			
-			InputFile = malloc(snprintf(NULL,0,"IOM02_01")+1);
-			sprintf(InputFile,"IOM02_01");				
+			InputFile = malloc(snprintf(NULL,0,"%s_%02d",InputFile_whole, e_DI_DIAGNOSTIC_IOM_DATA+1)+1);
+
+
+			sprintf(InputFile,"%s_%02d",InputFile_whole, e_DI_DIAGNOSTIC_IOM_DATA+1);				
 		}
 		else if(IOM_Type_of_data == e_DI_CHANNEL_CONFIGURATION_IOM_DATA)
 		{
 			string_to_compare = malloc(snprintf(NULL,0,"Ch-")+1);
 			sprintf(string_to_compare,"Ch-");
 			
-			InputFile = malloc(snprintf(NULL,0,"IOM02_02")+1);
-			sprintf(InputFile,"IOM02_02");	
+			InputFile = malloc(snprintf(NULL,0,"%s_%02d",InputFile_whole, e_DI_CHANNEL_CONFIGURATION_IOM_DATA+1)+1);
+
+
+			sprintf(InputFile,"%s_%02d",InputFile_whole, e_DI_CHANNEL_CONFIGURATION_IOM_DATA+1);
 		}
 		else if(IOM_Type_of_data == e_DI_CHANNEL_DIAGNOSTIC_IOM_DATA)
 		{
 			string_to_compare = malloc(snprintf(NULL,0,"Ch-")+1);
 			sprintf(string_to_compare,"Ch-");
 			
-			InputFile = malloc(snprintf(NULL,0,"IOM02_03")+1);
-			sprintf(InputFile,"IOM02_03");	
+			InputFile = malloc(snprintf(NULL,0,"%s_%02d",InputFile_whole, e_DI_CHANNEL_DIAGNOSTIC_IOM_DATA+1)+1);
+
+
+			sprintf(InputFile,"%s_%02d",InputFile_whole, e_DI_CHANNEL_DIAGNOSTIC_IOM_DATA+1);
 		}
 	}
 
