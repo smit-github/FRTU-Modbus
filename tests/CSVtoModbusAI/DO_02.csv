@@ -1,0 +1,13 @@
+Channelwise Configuration
+Digital Output Double Command (TI 46)
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,select_execute_t,output_t_0,output_t_1,Default on Time,ON before OFF,Longtext
+Ch-03,1,0,3,0,0,3,250,100,10,1000,0,Channel 3
+Ch-04,1,0,3,0,0,3,250,100,10,1000,0,Channel 3
+Ch-05,1,0,5,0,0,3,3500,1,1,2,1,Channel 5
+Ch-06,1,0,5,0,0,3,3500,1,1,2,1,Channel 5
+Digital Output Single Command (TI 45)
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,select_execute_t,output_t_0,output_t_1,Default on Time,ON before OFF,Longtext
+Ch-01,1,0,1,0,0,1,0,1,1,1,0,Channel 1
+Ch-02,1,0,2,0,0,1,0,1,1,1,0,Channel 2
+Ch-07,1,0,7,0,0,1,0,1,1,1,0,Channel 7
+Ch-08,1,0,8,0,0,1,0,1,1,1,0,Channel 8

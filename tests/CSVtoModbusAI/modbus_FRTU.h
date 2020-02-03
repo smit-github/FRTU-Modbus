@@ -11,7 +11,22 @@
 
 #include <stdint.h>
 
-#define SERVER_ID         1//17
+#define TEST_DO
+#ifdef TEST_DO
+	#define SERVER_ID         7//17
+#endif
+
+//#define TEST_DI
+#ifdef TEST_DI
+	#define SERVER_ID         3//17
+#endif
+
+//#define TEST_AI
+#ifdef TEST_AI
+	#define SERVER_ID         1//17
+#endif
+
+
 #define INVALID_SERVER_ID 18
 
 #define BYTEperWORD 2

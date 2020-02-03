@@ -1,0 +1,6 @@
+all:	
+	gcc *.c -o CSVtoModbus `pkg-config --libs --cflags libmodbus`
+clean:
+	rm -f $(PROJECT_BINARY_NAME)
+
+

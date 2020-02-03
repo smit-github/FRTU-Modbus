@@ -5,6 +5,7 @@
 
 #include "modbus_FRTU_DI.h"
 #include "modbus_FRTU_AI.h"
+#include "modbus_FRTU_DO.h"
 #include "csv_FRTU.h"
 
 
@@ -36,6 +37,8 @@ IOM_DI_CSV_Data  s_DI_DIAGNOSTIC_IOM_DATA,s_DI_CHANNEL_CONFIGURATION_IOM_DATA,S_
 
 
 IOM_AI_CSV_Data s_AI_DIAGNOSTIC_IOM_DATA,s_AI_CHANNEL_CONFIGURATION_IOM_DATA;
+
+IOM_DO_CSV_Data  s_DO_DIAGNOSTIC_IOM_DATA,s_DO_CHANNEL_CONFIGURATION_IOM_DATA,s_DO_CHANNEL_DIAGNOSTIC_IOM_DATA;		
 
 
 const string string_DI_IOM[4] = {
@@ -167,6 +170,16 @@ void AI_CSVtoModbus_DiagnosisPerCardFrame(IOM_AI_CSV_Data* csv_data,AI_DIAGNOSIS
 }
 
 
+void DO_CSVtoModbus_DiagnosisPerCardFrame(IOM_DO_CSV_Data* csv_data,DO_DIAGNOSIS_POINT_ADDRESSES* modbusFrame, uint8_t CardNo)
+{
+	modbusFrame->Diagnosis_whole.DIAGNOSIS_DO_Per_Card[CardNo].DIAGNOSIS_BYTES.CASDU1 = csv_data->CASDU1[CardNo];
+	modbusFrame->Diagnosis_whole.DIAGNOSIS_DO_Per_Card[CardNo].DIAGNOSIS_BYTES.CASDU2 = csv_data->CASDU2[CardNo];
+	modbusFrame->Diagnosis_whole.DIAGNOSIS_DO_Per_Card[CardNo].DIAGNOSIS_BYTES.IOA1 = csv_data->IOA1[CardNo];
+	modbusFrame->Diagnosis_whole.DIAGNOSIS_DO_Per_Card[CardNo].DIAGNOSIS_BYTES.IOA2 = csv_data->IOA2[CardNo];
+	modbusFrame->Diagnosis_whole.DIAGNOSIS_DO_Per_Card[CardNo].DIAGNOSIS_BYTES.IOA3 = csv_data->IOA3[CardNo];
+	modbusFrame->Diagnosis_whole.DIAGNOSIS_DO_Per_Card[CardNo].DIAGNOSIS_BYTES.TI = csv_data->TI[CardNo];
+}
+
 void DI_CSVtoModbus_HPAPerChannelFrame(IOM_DI_CSV_Data* csv_data,DI_HARDWARE_POINT_ADDRESSES* modbusFrame, uint8_t ChannelNo)
 {
 	modbusFrame->HPA_whole.HPA_DI_Per_Channel[ChannelNo].HPA.CASDU1 = csv_data->CASDU1[ChannelNo];
@@ -234,9 +247,10 @@ void AI_CSVtoModbus_HPAPerChannelFrame(IOM_AI_CSV_Data* csv_data,AI_HARDWARE_POI
 	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.IOA3 = csv_data->IOA3[ChannelNo];
 	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.TI = csv_data->TI[ChannelNo];
 
-	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.AI_bits.AI_Bits_Byte = csv_data->block[ChannelNo];
+	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.AI_bits.AI_Bits_Byte = 0x00;
+	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.AI_bits.bits.Block = csv_data->block[ChannelNo];
 
-	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.AI_bits.AI_Bits_Byte |= csv_data->Zero_range[ChannelNo];
+	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.AI_bits.bits.Zero = csv_data->Zero_range[ChannelNo];
 
 
 	floatToModbus(csv_data->thresh_additive[ChannelNo],&(modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.AI_Thresold_Additive));
@@ -261,6 +275,34 @@ void AI_CSVtoModbus_HPAPerChannelFrame(IOM_AI_CSV_Data* csv_data,AI_HARDWARE_POI
 	modbusFrame->HPA_whole.HPA_AI_Per_Channel[ChannelNo].HPA.Input_Type = csv_data->Input_Type[ChannelNo];
 }
 
+
+
+
+void DO_CSVtoModbus_HPAPerChannelFrame(IOM_DO_CSV_Data* csv_data,DO_HARDWARE_POINT_ADDRESSES* modbusFrame, uint8_t ChannelNo)
+{
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.CASDU1 = csv_data->CASDU1[ChannelNo];
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.CASDU2 = csv_data->CASDU2[ChannelNo];
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.IOA1 = csv_data->IOA1[ChannelNo];
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.IOA2 = csv_data->IOA2[ChannelNo];
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.IOA3 = csv_data->IOA3[ChannelNo];
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.TI = csv_data->TI[ChannelNo];
+
+
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.select_execute_t  = csv_data->select_execute_t[ChannelNo];
+
+
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.default_on_t = csv_data->Default_on_Time[ChannelNo];
+
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.output_t_0 = csv_data->output_t_0[ChannelNo];
+
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.output_t_1 = csv_data->output_t_1[ChannelNo];
+
+	modbusFrame->HPA_whole.HPA_DO_Per_Channel[ChannelNo].HPA.DO_bitAllocation.bits.On_before_off = csv_data->ON_before_OFF[ChannelNo];
+
+}
+
+
+
 void DI_CSVtoModbus_DiagnosticsPerChannelFrame(IOM_DI_CSV_Data* csv_data,DI_SW_DIAGNOSIS_POINT_ADDRESSES* modbusFrame, uint8_t ChannelNo)
 {
 	modbusFrame-> Diagnosis_whole.DIAGNOSIS_SW_DI_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.CASDU1 = csv_data->CASDU1[ChannelNo];
@@ -274,8 +316,24 @@ modbusFrame->
 Diagnosis_whole.DIAGNOSIS_SW_DI_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.IOA3 = csv_data->IOA3[ChannelNo];
 modbusFrame->
 Diagnosis_whole.DIAGNOSIS_SW_DI_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.TI = csv_data->TI[ChannelNo];
-
 }
+
+
+void DO_CSVtoModbus_DiagnosticsPerChannelFrame(IOM_DO_CSV_Data* csv_data,DO_SW_DIAGNOSIS_POINT_ADDRESSES* modbusFrame, uint8_t ChannelNo)
+{
+	modbusFrame-> Diagnosis_whole.DIAGNOSIS_SW_DO_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.CASDU1 = csv_data->CASDU1[ChannelNo];
+	modbusFrame->
+	Diagnosis_whole.DIAGNOSIS_SW_DO_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.CASDU2 = csv_data->CASDU2[ChannelNo];
+	modbusFrame->
+	Diagnosis_whole.DIAGNOSIS_SW_DO_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.IOA1 = csv_data->IOA1[ChannelNo];
+	modbusFrame->
+	Diagnosis_whole.DIAGNOSIS_SW_DO_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.IOA2 = csv_data->IOA2[ChannelNo];
+	modbusFrame->
+	Diagnosis_whole.DIAGNOSIS_SW_DO_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.IOA3 = csv_data->IOA3[ChannelNo];
+	modbusFrame->
+	Diagnosis_whole.DIAGNOSIS_SW_DO_Per_Channel[ChannelNo].SW_DIAGNOSIS_BYTES.TI = csv_data->TI[ChannelNo];
+}
+
 
 
 int extract_DI_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOM_DI_CSV_Data *data)
@@ -286,6 +344,7 @@ int extract_DI_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOM_DI_CSV_Dat
 	char * cmd;
 	int count;	
 	char *token, *p;
+	uint8_t channel_no;
 	
 	count = 0;
 
@@ -369,100 +428,136 @@ int extract_DI_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOM_DI_CSV_Dat
 			printf("%s",buf);
 			p = buf;
 			token = strsep(&p, ",\n");//1st field
-			if(token != NULL)		strcpy(data->Name[count], token);
+			if(token != NULL)	
+			{
+				if(strcmp(token, "Ch-01") == 0) channel_no = 0;
+				else
+				if(strcmp(token, "Ch-02") == 0) channel_no = 1;
+				else
+				if(strcmp(token, "Ch-03") == 0) channel_no = 2;
+				else
+				if(strcmp(token, "Ch-04") == 0) channel_no = 3;
+				else
+				if(strcmp(token, "Ch-05") == 0) channel_no = 4;
+				else
+				if(strcmp(token, "Ch-06") == 0) channel_no = 5;
+				else
+				if(strcmp(token, "Ch-07") == 0) channel_no = 6;
+				else
+				if(strcmp(token, "Ch-08") == 0) channel_no = 7;
+				else
+				if(strcmp(token, "Ch-09") == 0) channel_no = 8;
+				else
+				if(strcmp(token, "Ch-10") == 0) channel_no = 9;
+				else
+				if(strcmp(token, "Ch-11") == 0) channel_no = 10;
+				else
+				if(strcmp(token, "Ch-12") == 0) channel_no = 11;
+				else
+				if(strcmp(token, "Ch-13") == 0) channel_no = 12;
+				else
+				if(strcmp(token, "Ch-14") == 0) channel_no = 13;
+				else
+				if(strcmp(token, "Ch-15") == 0) channel_no = 14;
+				else
+				if(strcmp(token, "Ch-16") == 0) channel_no = 15;
+				
+				strcpy(data->Name[channel_no], token);
+			}
+			
 			token = strsep(&p, ",\n");//2nd field
-			if(token != NULL)		data->CASDU1[count] = atoi(token);
+			if(token != NULL)		data->CASDU1[channel_no] = atoi(token);
 			token = strsep(&p, ",\n");//3rd field
-			if(token != NULL)		data->CASDU2[count] = atoi(token);
+			if(token != NULL)		data->CASDU2[channel_no] = atoi(token);
 			token = strsep(&p, ",\n");//4th field
-			if(token != NULL)		data->IOA1[count] = atoi(token);
+			if(token != NULL)		data->IOA1[channel_no] = atoi(token);
 			token = strsep(&p, ",\n");//5th field
-			if(token != NULL)		data->IOA2[count] = atoi(token);
+			if(token != NULL)		data->IOA2[channel_no] = atoi(token);
 			token = strsep(&p, ",\n");//6th field
-			if(token != NULL)		data->IOA3[count] = atoi(token);
+			if(token != NULL)		data->IOA3[channel_no] = atoi(token);
 			token = strsep(&p, ",\n");//7th field
-			if(token != NULL)		data->TI[count] = atoi(token);
+			if(token != NULL)		data->TI[channel_no] = atoi(token);
 			
 
-			if(data->TI[count] == DOUBLE_POINT_DI_TI)
+			if(data->TI[channel_no] == DOUBLE_POINT_DI_TI)
 			{
 				token = strsep(&p, ",\n");//8th field
-				if(token != NULL)	data->int_posit_t[count] = atoi(token);
+				if(token != NULL)	data->int_posit_t[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//9th field
-				if(token != NULL)	data->Inversion[count] = atoi(token);
+				if(token != NULL)	data->Inversion[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//10th field
-				if(token != NULL)	data->Inversion_1[count] = atoi(token);
+				if(token != NULL)	data->Inversion_1[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//11th field
-				if(token != NULL)	data->block[count] = atoi(token);
+				if(token != NULL)	data->block[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//12th field
-				if(token != NULL)	data->faulty_pos_t[count] = atoi(token);
+				if(token != NULL)	data->faulty_pos_t[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//13th field
-				if(token != NULL)	data->ON_before_OFF[count] = atoi(token);
+				if(token != NULL)	data->ON_before_OFF[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//14th field
-				if(token != NULL)	data->Flutt_Number[count] = atoi(token);
+				if(token != NULL)	data->Flutt_Number[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//15th field
-				if(token != NULL)	data->Flutt_dp_qds[count] = atoi(token);
+				if(token != NULL)	data->Flutt_dp_qds[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//16th field
-				if(token != NULL)	data->Flutt_t[count] = atoi(token);
+				if(token != NULL)	data->Flutt_t[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//17th field
-				if(token != NULL)	data->SW_Filter_t[count] = atoi(token);
+				if(token != NULL)	data->SW_Filter_t[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//18th field
-				if(token != NULL)	strcpy(data->Longtext[count], token);
+				if(token != NULL)	strcpy(data->Longtext[channel_no], token);
 
 
 	#ifdef DEBUG
 			//check print
 			printf("DEBUG:\nName:'%s',\n CASDU1:'%d',\n CASDU2:'%d',\n IOA1:'%d',\n IOA2:'%d',\n IOA3:'%d',\n TI:'%d',\n int_posit_t:'%d',\n Inversion_0:'%d',\n Inversion_1:'%d',\n block:'%d',\n faulty_pos_t:'%d',\n ON_before_OFF:'%d',\n Flutt_Number:'%d',\n Flutt_dp_qds:'%d',\n Flutt_t:'%d',\n SW_Filter_t:'%d',\n Longtext:'%s',\n count:%d.\n",
 
-	data->Name[count], 
-	data->CASDU1[count], 
-	data->CASDU2[count], 
-	data->IOA1[count], 
-	data->IOA2[count], 
-	data->IOA3[count], 
-	data->TI[count], 
-	data->int_posit_t[count], 
-	data->Inversion[count], 
-	data->Inversion_1[count], 
-	data->block[count], 
-	data->faulty_pos_t[count], 
-	data->ON_before_OFF[count], 
-	data->Flutt_Number[count],
-	data->Flutt_dp_qds[count],
-	data->Flutt_t[count],
-	data->SW_Filter_t[count],
-	data->Longtext[count],
+	data->Name[channel_no], 
+	data->CASDU1[channel_no], 
+	data->CASDU2[channel_no], 
+	data->IOA1[channel_no], 
+	data->IOA2[channel_no], 
+	data->IOA3[channel_no], 
+	data->TI[channel_no], 
+	data->int_posit_t[channel_no], 
+	data->Inversion[channel_no], 
+	data->Inversion_1[channel_no], 
+	data->block[channel_no], 
+	data->faulty_pos_t[channel_no], 
+	data->ON_before_OFF[channel_no], 
+	data->Flutt_Number[channel_no],
+	data->Flutt_dp_qds[channel_no],
+	data->Flutt_t[channel_no],
+	data->SW_Filter_t[channel_no],
+	data->Longtext[channel_no],
 	count
 	);
 
 	#endif
 
 			}
-			else if(data->TI[count] == SINGLE_POINT_DI_TI)	
+			else if(data->TI[channel_no] == SINGLE_POINT_DI_TI)	
 			{	
 				token = strsep(&p, ",\n");//8th field
-				if(token != NULL)	data->Inversion[count] = atoi(token);
+				if(token != NULL)	data->Inversion[channel_no] = atoi(token);
 				
 				token = strsep(&p, ",\n");//9th field
-				if(token != NULL)	data->block[count] = atoi(token);
+				if(token != NULL)	data->block[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//10th field
-				if(token != NULL)	data->Flutt_Number[count] = atoi(token);
+				if(token != NULL)	data->Flutt_Number[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//11th field
-				if(token != NULL)	data->Flutt_dp_qds[count] = atoi(token);
+				if(token != NULL)	data->Flutt_dp_qds[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//12th field
-				if(token != NULL)	data->Flutt_t[count] = atoi(token);
+				if(token != NULL)	data->Flutt_t[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//13th field
-				if(token != NULL)	data->SW_Filter_t[count] = atoi(token);
+				if(token != NULL)	data->SW_Filter_t[channel_no] = atoi(token);
 				token = strsep(&p, ",\n");//14th field
-					if(token != NULL)	data->State_of_flutter_information[count] = atoi(token);
+					if(token != NULL)	data->State_of_flutter_information[channel_no] = atoi(token);
 					token = strsep(&p, ",\n");//15th field
-					if(token != NULL)	strcpy(data->Longtext[count], token);
+					if(token != NULL)	strcpy(data->Longtext[channel_no], token);
 
 
 		#ifdef DEBUG
 				//check print
 				printf("DEBUG:\nName:'%s',\n CASDU1:'%d',\n CASDU2:%d,\n IOA1:'%d',\n IOA2:'%d',\n IOA3:'%d',\n TI:'%d',\n Inversion:'%d',\n block:'%d',\n Flutt_Number:'%d',\n Flutt_dp_qds:'%d',\n Flutt_t:'%d',\n SW_Filter_t:'%d',\n State_of_flutter_information:'%d',\n Longtext:'%s',\n count:%d.\n",
-				data->Name[count], data->CASDU1[count], data->CASDU2[count], data->IOA1[count], data->IOA2[count], data->IOA3[count], data->TI[count], data->Inversion[count], data->block[count], data->Flutt_Number[count], data->Flutt_dp_qds[count], data->Flutt_t[count], data->SW_Filter_t[count], data->State_of_flutter_information[count],data->Longtext[count],count);
+				data->Name[channel_no], data->CASDU1[channel_no], data->CASDU2[channel_no], data->IOA1[channel_no], data->IOA2[channel_no], data->IOA3[channel_no], data->TI[channel_no], data->Inversion[channel_no], data->block[channel_no], data->Flutt_Number[channel_no], data->Flutt_dp_qds[channel_no], data->Flutt_t[channel_no], data->SW_Filter_t[channel_no], data->State_of_flutter_information[channel_no],data->Longtext[channel_no],count);
 
 		#endif
 			}
@@ -696,6 +791,225 @@ int extract_AI_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOM_AI_CSV_Dat
 
 	return count;	
 }
+
+
+
+
+int extract_DO_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOM_DO_CSV_Data *data)
+{
+
+
+	FILE *fp,*fPtr;
+	char buf[BUFSIZE];
+	char * cmd;
+	int count;	
+	char *token, *p;
+	uint8_t channel_no;
+	
+	count = 0;
+
+	if(IOM_Type == e_DO_IOM_TYPE)
+	{
+		if(IOM_Type_of_data == e_DO_DIAGNOSTIC_IOM_DATA)
+		{
+
+			string_to_compare = malloc(snprintf(NULL,0,"SW-")+1);
+			sprintf(string_to_compare,"SW-");
+			
+			InputFile = malloc(snprintf(NULL,0,"%s_%02d",InputFile_whole, e_DO_DIAGNOSTIC_IOM_DATA+1)+1);
+
+
+			sprintf(InputFile,"%s_%02d",InputFile_whole, e_DO_DIAGNOSTIC_IOM_DATA+1);				
+		}
+		else if(IOM_Type_of_data == e_DO_CHANNEL_CONFIGURATION_IOM_DATA)
+		{
+			string_to_compare = malloc(snprintf(NULL,0,"Ch-")+1);
+			sprintf(string_to_compare,"Ch-");
+			
+			InputFile = malloc(snprintf(NULL,0,"%s_%02d",InputFile_whole, e_DO_CHANNEL_CONFIGURATION_IOM_DATA+1)+1);
+
+
+			sprintf(InputFile,"%s_%02d",InputFile_whole, e_DO_CHANNEL_CONFIGURATION_IOM_DATA+1);
+		}
+		else if(IOM_Type_of_data == e_DO_CHANNEL_DIAGNOSTIC_IOM_DATA)
+		{
+			string_to_compare = malloc(snprintf(NULL,0,"Ch-")+1);
+			sprintf(string_to_compare,"Ch-");
+			
+			InputFile = malloc(snprintf(NULL,0,"%s_%02d",InputFile_whole, e_DO_CHANNEL_DIAGNOSTIC_IOM_DATA+1)+1);
+
+
+			sprintf(InputFile,"%s_%02d",InputFile_whole, e_DO_CHANNEL_DIAGNOSTIC_IOM_DATA+1);
+		}
+	}
+
+	cmd = malloc(snprintf(NULL,0,"csvgrep -c 1 -m \"%s\" %s.csv  | sed 1d ",string_to_compare,InputFile)+1);
+	sprintf(cmd,"csvgrep -c 1 -m \"%s\" %s.csv  | sed 1d ",string_to_compare,InputFile);
+				
+	printf("%s",cmd);
+
+	fp = popen(cmd, "r");
+
+	if (fp == NULL) {
+		printf("Failed to run command\n" );
+		exit(1);
+	}
+
+
+	if(IOM_Type == e_DO_IOM_TYPE)
+	{
+
+		if(IOM_Type_of_data == e_DO_CHANNEL_CONFIGURATION_IOM_DATA)
+		{
+		while (fgets(buf, BUFSIZE, fp) != NULL) 
+		{
+
+			printf("%s",buf);
+			p = buf;
+			token = strsep(&p, ",\n");//1st field
+			if(token != NULL)	
+			{
+				if(strcmp(token, "Ch-01") == 0) channel_no = 0;
+				else
+				if(strcmp(token, "Ch-02") == 0) channel_no = 1;
+				else
+				if(strcmp(token, "Ch-03") == 0) channel_no = 2;
+				else
+				if(strcmp(token, "Ch-04") == 0) channel_no = 3;
+				else
+				if(strcmp(token, "Ch-05") == 0) channel_no = 4;
+				else
+				if(strcmp(token, "Ch-06") == 0) channel_no = 5;
+				else
+				if(strcmp(token, "Ch-07") == 0) channel_no = 6;
+				else
+				if(strcmp(token, "Ch-08") == 0) channel_no = 7;
+		
+				strcpy(data->Name[channel_no], token);
+			}
+			token = strsep(&p, ",\n");//2nd field
+			if(token != NULL)		data->CASDU1[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//3rd field
+			if(token != NULL)		data->CASDU2[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//4th field
+			if(token != NULL)		data->IOA1[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//5th field
+			if(token != NULL)		data->IOA2[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//6th field
+			if(token != NULL)		data->IOA3[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//7th field
+			if(token != NULL)		data->TI[channel_no] = atoi(token);
+			
+			token = strsep(&p, ",\n");//8th field
+			if(token != NULL)	data->select_execute_t[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//9th field
+			if(token != NULL)	data->output_t_0 [channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//10th field
+			if(token != NULL)	data->output_t_1[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//11th field
+			if(token != NULL)	data->Default_on_Time[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//12th field
+			if(token != NULL)	data->ON_before_OFF[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//13th field
+			if(token != NULL)	strcpy(data->Longtext[channel_no], token);
+
+
+	#ifdef DEBUG
+			//check print
+			printf("DEBUG:\nName:'%s',\n CASDU1:'%d',\n CASDU2:'%d',\n IOA1:'%d',\n IOA2:'%d',\n IOA3:'%d',\n TI:'%d',\n select_execute_t:'%d',\n output_t_0:'%d',\n output_t_1:'%d',\n Default on Time:'%d',\n ON_before_OFF:'%d',\n Longtext:'%s',\n count:%d.\n",
+
+	data->Name[channel_no], 
+	data->CASDU1[channel_no], 
+	data->CASDU2[channel_no], 
+	data->IOA1[channel_no], 
+	data->IOA2[channel_no], 
+	data->IOA3[channel_no], 
+	data->TI[channel_no], 
+	data->select_execute_t[channel_no], 
+	data->output_t_0[channel_no], 
+	data->output_t_1[channel_no], 
+	data->Default_on_Time[channel_no], 
+	data->ON_before_OFF[channel_no], 
+	data->Longtext[channel_no],
+	count
+	);
+
+	#endif
+
+
+
+		count++;		
+		}
+		}
+		else if(IOM_Type_of_data == e_DO_CHANNEL_DIAGNOSTIC_IOM_DATA || IOM_Type_of_data ==  e_DO_DIAGNOSTIC_IOM_DATA)
+		{
+		while (fgets(buf, BUFSIZE, fp) != NULL) 
+		{
+
+			printf("%s",buf);
+			p = buf;
+			token = strsep(&p, ",\n");//1st field
+if(token != NULL)	
+			{
+				if(strcmp(token, "Ch-01") == 0) channel_no = 0;
+				else
+				if(strcmp(token, "Ch-02") == 0) channel_no = 1;
+				else
+				if(strcmp(token, "Ch-03") == 0) channel_no = 2;
+				else
+				if(strcmp(token, "Ch-04") == 0) channel_no = 3;
+				else
+				if(strcmp(token, "Ch-05") == 0) channel_no = 4;
+				else
+				if(strcmp(token, "Ch-06") == 0) channel_no = 5;
+				else
+				if(strcmp(token, "Ch-07") == 0) channel_no = 6;
+				else
+				if(strcmp(token, "Ch-08") == 0) channel_no = 7;
+		
+				strcpy(data->Name[channel_no], token);
+			}
+			token = strsep(&p, ",\n");//2nd field
+			if(token != NULL)		data->CASDU1[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//3rd field
+			if(token != NULL)	 	data->CASDU2[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//4th field
+			if(token != NULL)		data->IOA1[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//5th field
+			if(token != NULL)		data->IOA2[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//6th field
+			if(token != NULL)		data->IOA3[channel_no] = atoi(token);
+			token = strsep(&p, ",\n");//7th field
+			if(token != NULL)		data->TI[channel_no] = atoi(token);
+			
+				#ifdef DEBUG
+				//check print
+				printf("DEBUG:\nName:'%s',\n CASDU1:'%d',\n CASDU2:'%d',\n IOA1:'%d',\n IOA2:'%d',\n IOA3:'%d',\n TI:'%d',\n count:%d.\n",
+
+				data->Name[channel_no], 
+				data->CASDU1[channel_no], 
+				data->CASDU2[channel_no], 
+				data->IOA1[channel_no], 
+				data->IOA2[channel_no], 
+				data->IOA3[channel_no], 
+				data->TI[channel_no], 
+				count
+				);
+
+				#endif
+		count++;
+		}
+
+		}
+	}
+
+
+	/* close */
+	pclose(fp);
+
+return count;
+}
+
 
 
 
