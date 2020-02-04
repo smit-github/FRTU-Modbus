@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdlib.h>     /* atoi */
+#include <stdlib.h>    
 #include "SeperateFromCSV.h"
 #include "modbus_FRTU.h"
 #include "modbus_Array_Defaults.h"
@@ -13,11 +13,6 @@
 #include "modbus_FRTU_DO.h"
 
 #include "csv_FRTU.h"
-
-
-
-
-
 
 #define BUFSIZE 1024
 
@@ -236,15 +231,22 @@ void Recognize_IOMs(IOM_Header_CSV_Data* data, uint8_t IOM_fileNumber)
 
 
 
-void ExtractAsPerIOMType(uint8_t typeOfIOM)
+void ExtractAsPerIOMType(IOM_Header_CSV_Data *data, uint8_t NoofIOM)
 {
 
 	uint8_t value,NoOfData;
-	switch(typeOfIOM)
+	int rc;
+	
+
+
+	switch(data->File_Identifier[NoofIOM])
 	{
 
 		case AI_Status:
 		{
+
+			m_modbus_set_slave(data->slaveID[NoofIOM]);
+
 			NoOfData = extract_AI_Data_From_CSV(e_AI_IOM_TYPE,e_AI_CHANNEL_CONFIGURATION_IOM_DATA,&s_AI_CHANNEL_CONFIGURATION_IOM_DATA);
 			printf("No. Data to Extract : %d\n",NoOfData);
 			for(int i = 0; i< NoOfData ; i++)	
@@ -252,17 +254,42 @@ void ExtractAsPerIOMType(uint8_t typeOfIOM)
 				AI_CSVtoModbus_HPAPerChannelFrame(&s_AI_CHANNEL_CONFIGURATION_IOM_DATA,&AI_HPA_Data,i);
 			}
 
+
+			printf("1/3 FRTU AI Channel Wise HAP: ");
+			m_modbus_write_registers(AI_FRTU_PART1_REGISTERS_ADDRESS,
+			AI_FRTU_PART1_REGISTERS_NB, &(AI_HPA_Data.HPA_AI_Whole_Channel[0]));
+
+			//ASSERT_TRUE(rc == DI_FRTU_PART1_REGISTERS_NB, "");
+
+			printf("2/3 FRTU AI Channel Wise HAP: ");
+			 m_modbus_write_registers(AI_FRTU_PART2_REGISTERS_ADDRESS,
+			AI_FRTU_PART2_REGISTERS_NB, &(AI_HPA_Data.HPA_AI_Whole_Channel[AI_NO_OF_HAP_BYTES/2]));
+
+
+
 			NoOfData = extract_AI_Data_From_CSV(e_AI_IOM_TYPE,e_AI_DIAGNOSTIC_IOM_DATA,&s_AI_DIAGNOSTIC_IOM_DATA);
 			printf("No. Data to Extract : %d\n",NoOfData);
 			for(int i = 0; i< NoOfData ; i++)	
 			{
 				AI_CSVtoModbus_DiagnosisPerCardFrame(&s_AI_DIAGNOSTIC_IOM_DATA,&DIAGNOSIS_AI_Per_Card,i);
 			}
+
+
+
+
+			printf("3/3 FRTU AI Card Wise Diagnostics: ");
+			m_modbus_write_registers(AI_FRTU_PART3_REGISTERS_ADDRESS,
+				AI_NO_OF_DIAGNOSIS_WORDBYTE, DIAGNOSIS_AI_Per_Card.DIAGNOSIS_AI_Whole_Card);
+
+			// ASSERT_TRUE(rc == DO_FRTU_PART3_REGISTERS_NB, "");
 		}
 		break;
 
 		case DI_Status:
 		{
+
+
+			m_modbus_set_slave(data->slaveID[NoofIOM]);
 
 			NoOfData = extract_DI_Data_From_CSV(e_DI_IOM_TYPE,e_DI_CHANNEL_CONFIGURATION_IOM_DATA,&s_DI_CHANNEL_CONFIGURATION_IOM_DATA);
 			printf("No. Data to Extract : %d\n",NoOfData);
@@ -271,6 +298,27 @@ void ExtractAsPerIOMType(uint8_t typeOfIOM)
 			DI_CSVtoModbus_HPAPerChannelFrame(&s_DI_CHANNEL_CONFIGURATION_IOM_DATA,&DI_HPA_Data,i);
 			}
 
+
+
+    printf("1/4 FRTU_DI_write_registers: ");
+    m_modbus_write_registers( DI_FRTU_PART1_REGISTERS_ADDRESS,
+DI_FRTU_PART1_REGISTERS_NB, &(DI_HPA_Data.HPA_DI_Whole_Channel[0])/*DI_FRTU_PART1_REGISTERS_TAB*/);
+    
+    //ASSERT_TRUE(rc == DI_FRTU_PART1_REGISTERS_NB, "");
+    
+    printf("2/4 FRTU_DI_write_registers: ");
+    m_modbus_write_registers(DI_FRTU_PART2_REGISTERS_ADDRESS,
+                                DI_FRTU_PART2_REGISTERS_NB, &(DI_HPA_Data.HPA_DI_Whole_Channel[0+DI_NO_OF_HAP_WORDBYTE/2]));
+    
+   // ASSERT_TRUE(rc == DI_FRTU_PART2_REGISTERS_NB, "");
+
+
+
+
+
+
+
+
 			NoOfData = extract_DI_Data_From_CSV(e_DI_IOM_TYPE,e_DI_DIAGNOSTIC_IOM_DATA,&s_DI_DIAGNOSTIC_IOM_DATA);
 			printf("No. Data to Extract : %d\n",NoOfData);
 
@@ -278,12 +326,33 @@ void ExtractAsPerIOMType(uint8_t typeOfIOM)
 			{						DI_CSVtoModbus_DiagnosisPerCardFrame(&s_DI_DIAGNOSTIC_IOM_DATA,&DI_DIAGNOSIS_Per_Card,i);
 			}
 
+	printf("3/4 FRTU_DO_write_registers: ");
+	m_modbus_write_registers(DI_FRTU_PART3_REGISTERS_ADDRESS,
+	DI_NO_OF_DIAGNOSIS_WORDBYTE, DI_DIAGNOSIS_Per_Card.DIAGNOSIS_DI_Whole_Card);
+
+	// ASSERT_TRUE(rc == DO_FRTU_PART3_REGISTERS_NB, "");
+
+
+
+
+
+
 			NoOfData = extract_DI_Data_From_CSV(e_DI_IOM_TYPE,e_DI_CHANNEL_DIAGNOSTIC_IOM_DATA,&S_DI_CHANNEL_DIAGNOSTIC_IOM_DATA);
 			printf("No. Data to Extract : %d\n",NoOfData);
 
 			for(int i = 0; i< NoOfData ; i++)	
 			{						DI_CSVtoModbus_DiagnosticsPerChannelFrame(&S_DI_CHANNEL_DIAGNOSTIC_IOM_DATA,&DI_SW_DIAGNOSIS_Per_Channel,i);
 			}
+
+
+	printf("4/4 FRTU_DO_write_registers: ");
+	m_modbus_write_registers(DI_FRTU_PART4_REGISTERS_ADDRESS,
+	DI_NO_OF_SW_DIAGNOSIS_WORDBYTE, &(DI_SW_DIAGNOSIS_Per_Channel.SW_DIAGNOSIS_DI_Whole_Channel[0]));
+
+	// ASSERT_TRUE(rc == DO_FRTU_PART4_REGISTERS_NB, "");
+
+
+
 		}
 		break;
 
@@ -291,12 +360,28 @@ void ExtractAsPerIOMType(uint8_t typeOfIOM)
 		case DO_Status:
 		{
 
+	
+		m_modbus_set_slave(data->slaveID[NoofIOM]);
+
 		NoOfData = extract_DO_Data_From_CSV(e_DO_IOM_TYPE,e_DO_CHANNEL_CONFIGURATION_IOM_DATA,&s_DO_CHANNEL_CONFIGURATION_IOM_DATA);
 		printf("No. Data to Extract : %d\n",NoOfData);
 		for(int i = 0; i< NoOfData ; i++)	
 		{
 				DO_CSVtoModbus_HPAPerChannelFrame(&s_DO_CHANNEL_CONFIGURATION_IOM_DATA,&DO_HPA_Data,i);
 		}
+
+
+		
+
+	    printf("1/4 FRTU_DO_write_registers: ");
+	    m_modbus_write_registers(DO_FRTU_PART1_REGISTERS_ADDRESS,DO_FRTU_PART1_REGISTERS_NB,
+					&(DO_HPA_Data.HPA_DO_Whole_Channel[0]));
+
+    printf("2/4 FRTU_DO_write_registers: ");
+     m_modbus_write_registers(DO_FRTU_PART2_REGISTERS_ADDRESS,
+                                DO_FRTU_PART2_REGISTERS_NB, &(DO_HPA_Data.HPA_DO_Whole_Channel[0+DO_NO_OF_HAP_WORDBYTE/2]));
+    
+   // ASSERT_TRUE(rc == DO_FRTU_PART2_REGISTERS_NB, "");
 
 
 		NoOfData = extract_DO_Data_From_CSV(e_DO_IOM_TYPE,e_DO_DIAGNOSTIC_IOM_DATA,&s_DO_DIAGNOSTIC_IOM_DATA);
@@ -307,17 +392,35 @@ void ExtractAsPerIOMType(uint8_t typeOfIOM)
 		}
 
 
+    printf("3/4 FRTU_DO_write_registers: ");
+    m_modbus_write_registers(DO_FRTU_PART3_REGISTERS_ADDRESS,
+                                DO_FRTU_PART3_REGISTERS_NB, &(DO_DIAGNOSIS_Per_Card.DIAGNOSIS_DO_Whole_Card[0]));
+    
+   // ASSERT_TRUE(rc == DO_FRTU_PART3_REGISTERS_NB, "");
+
+
 		NoOfData = extract_DO_Data_From_CSV(e_DO_IOM_TYPE,e_DO_CHANNEL_DIAGNOSTIC_IOM_DATA,&s_DO_CHANNEL_DIAGNOSTIC_IOM_DATA);
 		printf("No. Data to Extract : %d\n",NoOfData);
 
 		for(int i = 0; i< NoOfData ; i++)	
 		{						DO_CSVtoModbus_DiagnosticsPerChannelFrame(&s_DO_CHANNEL_DIAGNOSTIC_IOM_DATA,&DO_SW_DIAGNOSIS_Per_Channel,i);
 		}
-		}
-		break;
+
+    printf("4/4 FRTU_DO_write_registers: ");
+    m_modbus_write_registers(DO_FRTU_PART4_REGISTERS_ADDRESS,
+                                DO_FRTU_PART4_REGISTERS_NB, &(DO_SW_DIAGNOSIS_Per_Channel.SW_DIAGNOSIS_DO_Whole_Channel[0]));
+    
+   // ASSERT_TRUE(rc == DO_FRTU_PART3_REGISTERS_NB, "");
+
+
+	}
+	break;
 		
 	}
 }
+
+
+
 
 
 

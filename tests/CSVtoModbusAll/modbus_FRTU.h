@@ -10,6 +10,7 @@
 
 
 #include <stdint.h>
+#include <stdbool.h> 
 
 #define SERVER_ID         7
 //#define TEST_DO
@@ -31,6 +32,21 @@
 #define INVALID_SERVER_ID 18
 
 #define BYTEperWORD 2
+
+enum {
+    TCP,
+    TCP_PI,
+    RTU
+};
+
+int Configure_Modbus(uint8_t use_backend);
+void m_modbus_set_error_recovery(void);
+void m_modbus_debug(bool Debug);
+void m_modbus_set_slave(uint8_t ServerID);
+int m_run_modbus(void);
+void m_modbus_write_registers(int addr, int nb, const uint16_t *data);
+void m_modbus_close_and_free_memory(void) ;
+void m_modbus_close(void);
 
 
 

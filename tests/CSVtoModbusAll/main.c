@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <modbus.h>
 
 #include "modbus_FRTU.h"
 #include "modbus_Array_Defaults.h"
@@ -27,23 +28,7 @@
 
 
 
-const int EXCEPTION_RC = 2;
-
 uint8_t No_of_IOMs;
-
-enum {
-    TCP,
-    TCP_PI,
-    RTU
-};
-
-int equal_dword(uint16_t *tab_reg, const uint32_t value) {
-    return ((tab_reg[0] == (value >> 16)) && (tab_reg[1] == (value & 0xFFFF)));
-}
-
-
-
-
 
 int main(int argc, char *argv[])
 {
@@ -99,36 +84,18 @@ int main(int argc, char *argv[])
         use_backend = TCP;
     }
 
-    if (use_backend == TCP) {
-        ctx = modbus_new_tcp("127.0.0.1", 1502);
-    } else if (use_backend == TCP_PI) {
-        ctx = modbus_new_tcp_pi("::1", "1502");
-    } else {
-        ctx = modbus_new_rtu("/dev/ttyUSB0", 115200, 'E', 8, 1);
-    }
-    if (ctx == NULL) {
-        fprintf(stderr, "Unable to allocate libmodbus context\n");
-        return -1;
-    }
-    modbus_set_debug(ctx, TRUE);
-    modbus_set_error_recovery(ctx,
-                              MODBUS_ERROR_RECOVERY_LINK |
-                              MODBUS_ERROR_RECOVERY_PROTOCOL);
 
-    if (use_backend == RTU) {
-        modbus_set_slave(ctx, SERVER_ID);
-    }
 
-    modbus_get_response_timeout(ctx, &old_response_to_sec, &old_response_to_usec);
-    if (modbus_connect(ctx) == -1) {
-        fprintf(stderr, "Connection failed: %s\n", modbus_strerror(errno));
-        modbus_free(ctx);
-        return -1;
-    }
-    modbus_get_response_timeout(ctx, &new_response_to_sec, &new_response_to_usec);
+	Configure_Modbus(use_backend);
+	m_modbus_debug(TRUE);
+	m_modbus_set_error_recovery();
+	m_modbus_set_slave(1);
+	m_run_modbus();
+
+
 
     printf("** UNIT TESTING **\n");
-//#endif
+
     /** HOLDING REGISTERS **/
 
 	
@@ -146,7 +113,7 @@ int main(int argc, char *argv[])
 		printf("File Name: %s\n", InputFile_whole);
 		IOM_Single_Seperator();
 
-		ExtractAsPerIOMType(IOM_Header_data.File_Identifier[i]);
+		ExtractAsPerIOMType(&IOM_Header_data,i);
 	}
 
 
@@ -216,7 +183,7 @@ int main(int argc, char *argv[])
 
 
 
-
+//modbus_set_slave(ctx, 1);
 
 	
 #ifdef TEST_AI
@@ -315,24 +282,12 @@ DI_FRTU_PART1_REGISTERS_NB, &(DI_HPA_Data.HPA_DI_Whole_Channel[0])/*DI_FRTU_PART
 	// ASSERT_TRUE(rc == DO_FRTU_PART4_REGISTERS_NB, "");
 
 #endif
-    modbus_close(ctx);
-    modbus_free(ctx);
-    ctx = NULL;
+	m_modbus_close();
   
 
 close:
-    /* Free the memory */
-    free(tab_rp_bits);
-    free(tab_rp_registers);
-
-    /* Close the connection */
-    modbus_close(ctx);
-    modbus_free(ctx);
-
+	m_modbus_close_and_free_memory();
     return (success) ? 0 : -1;
-
-
-
 }
 
 

@@ -17,7 +17,7 @@ int SeperateCSV(void);
 
 void Recognize_IOMs(IOM_Header_CSV_Data* data, uint8_t IOM_fileNumber);
 void fetchIOMHeaderCSV(IOM_Header_CSV_Data* data);
-void ExtractAsPerIOMType(uint8_t typeOfIOM);
+void ExtractAsPerIOMType(IOM_Header_CSV_Data *data, uint8_t NoofIOM);
 
 extern IOM_Header_CSV_Data IOM_Header_data;
 

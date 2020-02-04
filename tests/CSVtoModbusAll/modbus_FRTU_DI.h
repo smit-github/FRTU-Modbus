@@ -29,7 +29,7 @@ typedef union
 	{	
 		uint8_t Inv:1;//LSB
 		uint8_t Inv_1:1;
-		uint8_t Block:1;
+		uint8_t block:1;
 		uint8_t flutter_ODS:1;
 		uint8_t State_Of_flutter:1;
 		uint8_t class_2:2;
