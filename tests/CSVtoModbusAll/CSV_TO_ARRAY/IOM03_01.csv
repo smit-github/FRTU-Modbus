@@ -1,4 +1,0 @@
-I/O Module Diagnostics,,,,,,
-Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
-SW-01 (Board Healthy),1,123,1,21,23,1
-SW-02 (RAM Checksum Error),255,255,255,255,255,1

@@ -23,6 +23,11 @@ extern char InputFile_whole[50];
 void IOM_Single_Seperator(void);
 
 
+enum CPU_TYPE_OF_DATA
+{
+	e_CPU_MODULE_GENERAL_DATA,
+	e_CPU_MODULE_DIAGNOSTIC_DATA		
+};
 
 enum DI_TYPE_OF_DATA
 {
@@ -180,6 +185,61 @@ void DO_CSVtoModbus_DiagnosisPerCardFrame(IOM_DO_CSV_Data* csv_data,DO_DIAGNOSIS
 void DO_CSVtoModbus_HPAPerChannelFrame(IOM_DO_CSV_Data* csv_data,DO_HARDWARE_POINT_ADDRESSES* modbusFrame, uint8_t ChannelNo);
 
 void DO_CSVtoModbus_DiagnosticsPerChannelFrame(IOM_DO_CSV_Data* csv_data,DO_SW_DIAGNOSIS_POINT_ADDRESSES* modbusFrame, uint8_t ChannelNo);
+
+/*******************CPU DIAGNOSTIC CSV******************************/
+
+
+
+typedef struct{
+	char Name[8][50];
+	uint8_t CASDU1[8];
+	uint8_t CASDU2[8];
+	uint8_t IOA1[8];
+	uint8_t IOA2[8];
+	uint8_t IOA3[8];
+	uint8_t TI[8];
+}
+CPU_DIAGNOSTIC_CSV_Data;
+
+
+int extract_CPU_DIAG_Data_From_CSV(CPU_DIAGNOSTIC_CSV_Data *data);
+
+extern CPU_DIAGNOSTIC_CSV_Data s_CPU_DIAGNOSTIC_DATA;
+
+
+/*******************CPU MODULE CSV******************************/
+
+
+
+typedef struct{
+	char* Own_IP_Address;
+	char* Subnet_Mask;
+	char* Default_Gateway;
+	char* SNMP_IP_Address;
+	char* NTP_Server_IP_Address;
+	uint8_t Sync_with_Time_in_minute;
+	uint8_t T0;
+	uint8_t T1;
+	uint8_t T2;
+	uint8_t T3;
+	uint8_t k;
+	uint8_t w;
+	char* Remote_Station_1_IP_Address;
+	char* Remote_Station_2_IP_Address;
+	char* SNMP_Read_Community;
+	char* SNMP_Write_Community;
+	char* HTTP_Web_Server_User_Name;
+	char* HTTP_Web_Server_Password;
+	uint8_t CASDU1;
+	uint8_t CASDU2;
+}
+CPU_MODULE_CSV_Data;
+
+
+int extract_CDU_MODULE_Data_From_CSV(CPU_MODULE_CSV_Data *data);
+
+extern CPU_MODULE_CSV_Data s_CPU_MODULE_CSV_Data;
+
 
 
 

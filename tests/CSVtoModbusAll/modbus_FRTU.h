@@ -48,5 +48,11 @@ void m_modbus_write_registers(int addr, int nb, const uint16_t *data);
 void m_modbus_close_and_free_memory(void) ;
 void m_modbus_close(void);
 
+void m_modbus_close_and_free(void) ;
+void m_modbus_free(void) ;
+void m_modbus_get_response_timeout_new(void);
+void m_modbus_get_response_timeout_old(void);
+int m_modbus_connect(void);
+
 
 

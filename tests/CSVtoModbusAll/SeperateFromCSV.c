@@ -24,6 +24,7 @@
 #define lengthofDO 27
 
 #define NO_OF_IOMS 10
+#define NO_OF_CPU 2
 
 #define AI_Status 1
 #define DI_Status 2
@@ -32,6 +33,7 @@
 
 
 IOM_Header_CSV_Data IOM_Header_data;
+CPU_Header_CSV_Data CPU_Header_data;
 
 
 const string string_IOM_Differentiate[4] = {
@@ -60,8 +62,13 @@ int SeperateCSV(void)
 	NoOfIOMs = 0;
 
 
-	cmd = malloc(snprintf(NULL,0,"csvgrep -c 1 -m IOM %s.csv -l | sed 1d > IOMs_text.csv",InputFile_CSV)+1);
-	sprintf(cmd,"csvgrep -c 1 -m IOM %s.csv -l | sed 1d > IOMs_text.csv",InputFile_CSV);
+
+
+
+
+
+	cmd = malloc(snprintf(NULL,0,"csvgrep -c 1 -m %s %s.csv -l | sed 1d > IOMs_text.csv",string_IOM_Differentiate[2],InputFile_CSV)+1);
+	sprintf(cmd,"csvgrep -c 1 -m %s %s.csv -l | sed 1d > IOMs_text.csv",string_IOM_Differentiate[2],InputFile_CSV);
 	if (system(cmd) == 256) 
 	{
 		printf("Failed to run command\n" );
@@ -141,15 +148,178 @@ IOM_LineNumber_CSV[i+1],InputFile_CSV,i+1);
 			else
 			{
 			 	IOM_status[i] = 0;
+				IOM_LineNumber_CSV[i] = 0xFFFF;
 			}
 
-		NoOfIOMs++;
+			NoOfIOMs++;
 		}
 	}
 
 return NoOfIOMs;
 }
 
+
+uint8_t fetchCPUHeaderCSVandSeperate(CPU_Header_CSV_Data* data,IOM_Header_CSV_Data* IOM_data)
+{
+
+	FILE *fp,*fPtr;
+	
+	uint8_t count = 0;
+	char buf[BUFSIZE];
+	char * cmd, *Tmp;			
+	char *token, *p;
+	uint8_t channel_no,NoOfIOMs =0;
+	
+
+	cmd = malloc(snprintf(NULL,0," grep -n -e \"IOM\" -e \"CPU\" %s.csv  > Header_text.csv",InputFile_CSV)+1);
+	sprintf(cmd,"grep -n -e \"IOM\" -e \"CPU\" %s.csv  > Header_text.csv",InputFile_CSV);
+	if (system(cmd) == 256) 
+	{
+		printf("Failed to run command\n" );
+		exit(1);
+	}
+
+	fp = fopen("Header_text.csv", "r");
+	
+	if (fp == NULL) {
+	printf("Failed to run command\n" );
+	exit(1);
+	}
+
+
+	for(int i =0;i<NO_OF_CPU;i++)
+	{
+		cmd = malloc(snprintf(NULL,0,"find -type f -name 'CPU%02d.csv' -delete",i+1)+1);
+		sprintf(cmd,"find -type f -name 'CPU%02d.csv' -delete",i+1);
+#ifdef DEBUG
+		printf("%s\n",cmd);
+#endif
+
+		system(cmd);
+	}
+
+	for(int i =0;i<NO_OF_IOMS;i++)
+	{
+		cmd = malloc(snprintf(NULL,0,"find -type f -name 'IOM%02d.csv' -delete",i+1)+1);
+		sprintf(cmd,"find -type f -name 'IOM%02d.csv' -delete",i+1);
+#ifdef DEBUG
+		printf("%s\n",cmd);
+#endif
+
+		system(cmd);
+		for(int j =0;j<3;j++)
+		{
+			cmd = malloc(snprintf(NULL,0,"find -type f -name 'IOM%02d_%02d.csv' -delete",i+1,j+1)+1);
+			sprintf(cmd,"find -type f -name 'IOM%02d_%02d.csv' -delete",i+1,j+1);
+	#ifdef DEBUG
+			printf("%s\n",cmd);
+	#endif
+			system(cmd);
+		}
+
+	
+	}
+
+
+
+
+	
+	while (fgets(buf, BUFSIZE, fp) != NULL) 
+	{
+		printf("%s",buf);
+		printf(" count : %d\n",count);
+		
+		p = buf;
+
+		data->Line_Number[count] = 0xFFFF;
+		data->Line_Number[count+1] = 0xFFFF;
+
+		token = strsep(&p, ":\n");//1st field
+		if(token != NULL) data->Line_Number[count] = atoi(token);
+		token = strsep(&p, ",\n");//2nd field
+		if(token != NULL) 
+		{	
+			data->IOM_Heading[count] = malloc(strlen(token)+1);
+			strcpy(data->IOM_Heading[count], token);			
+		}
+		token = strsep(&p, ",\n");//3rd field
+		if(token != NULL) 
+		{	
+			data->IOM_Description[count] = malloc(strlen(token)+1);
+			strcpy(data->IOM_Description[count], token);			
+		}
+		token = strsep(&p, ",\n");//4th field
+		if(token != NULL) data->slaveID[count] = atoi(token);
+		
+		count++;
+	}
+
+
+	for(int i = 0;i < count;i++)
+	{
+
+		if(data->Line_Number[i] < 35)
+		{
+			cmd = malloc(snprintf(NULL,0,"sed -n \"%d,%d p\" %s.csv > CPU%02d.csv",data->Line_Number[i],data->Line_Number[i+1]-1,InputFile_CSV,i+1)+1);
+			sprintf(cmd,"sed -n \"%d,%d p\" %s.csv > CPU%02d.csv",data->Line_Number[i],
+			data->Line_Number[i+1]-1,InputFile_CSV,i+1);
+			#ifdef DEBUG
+			printf("%s\n",cmd);
+			#endif
+
+			if (system(cmd) == 256) 
+			{
+				printf("Failed to run command\n" );
+				exit(1);
+			}
+		}
+		else
+		{
+			
+			IOM_data->Line_Number[NoOfIOMs]=data->Line_Number[i];
+			printf("LineNumber: %d\n", IOM_data->Line_Number[NoOfIOMs]);
+
+			if(data->IOM_Heading[i] != NULL) 
+			{	
+				IOM_data->IOM_Heading[NoOfIOMs] = malloc(strlen(data->IOM_Heading[i])+1);
+				strcpy(IOM_data->IOM_Heading[NoOfIOMs],data->IOM_Heading[i]);			
+			}
+
+			if(data->IOM_Description[i] != NULL) 
+			{	
+				IOM_data->IOM_Description[NoOfIOMs] = malloc(strlen(data->IOM_Description[i])+1);
+				strcpy(IOM_data->IOM_Description[NoOfIOMs],data->IOM_Description[i]);			
+			}
+			IOM_data->slaveID[NoOfIOMs]=data->slaveID[i];
+			printf("Slave ID: %d\n", IOM_data->slaveID[NoOfIOMs]);
+
+			NoOfIOMs++;
+
+
+			cmd = malloc(snprintf(NULL,0,"sed -n \"%d,%d p\" %s.csv > IOM%02d.csv",data->Line_Number[i],data->Line_Number[i+1]-1,InputFile_CSV,NoOfIOMs)+1);
+		sprintf(cmd,"sed -n \"%d,%d p\" %s.csv > IOM%02d.csv",data->Line_Number[i],data->Line_Number[i+1]-1,InputFile_CSV,NoOfIOMs);
+
+
+
+
+		#ifdef DEBUG
+			printf("%s\n",cmd);
+		#endif
+
+			if (system(cmd) == 256) 
+			{
+				printf("Failed to run command\n" );
+				exit(1);
+			}
+
+			
+		}	
+	}
+	/* close */
+	fclose(fp);
+
+	return 	NoOfIOMs;
+}
 
 void fetchIOMHeaderCSV(IOM_Header_CSV_Data* data)
 {
@@ -163,6 +333,7 @@ void fetchIOMHeaderCSV(IOM_Header_CSV_Data* data)
 			
 	char *token, *p;
 	uint8_t channel_no;
+
 	
 
 #ifdef TESTs
@@ -171,7 +342,8 @@ void fetchIOMHeaderCSV(IOM_Header_CSV_Data* data)
 	printf("%s\n",cmd);
 
 	fp = popen(cmd, "r");
-#endif
+
+#endif	
 
 	fp = fopen("IOMs_text.csv", "r");
 	
@@ -209,7 +381,12 @@ void fetchIOMHeaderCSV(IOM_Header_CSV_Data* data)
 	
 	
 	/* close */
-	pclose(fp);	
+	fclose(fp);
+
+
+
+
+
 }
 
 

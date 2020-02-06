@@ -73,17 +73,29 @@ int m_run_modbus(void)
 {
 
 	//m_modbus_set_slave(
-	modbus_get_response_timeout(ctx, &old_response_to_sec, &old_response_to_usec);
+	m_modbus_get_response_timeout_old();
 
-	if (modbus_connect(ctx) == -1) 
+	if (m_modbus_connect() == -1) 
 	{
 		fprintf(stderr, "Connection failed: %s\n", modbus_strerror(errno));
-		modbus_free(ctx);
+		m_modbus_free();
 		return -1;
 	}
 
+	m_modbus_get_response_timeout_new();
+}
+
+
+void m_modbus_get_response_timeout_old(void)
+{
+	modbus_get_response_timeout(ctx, &old_response_to_sec, &old_response_to_usec);	
+}
+
+void m_modbus_get_response_timeout_new(void)
+{
 	modbus_get_response_timeout(ctx, &new_response_to_sec, &new_response_to_usec);
 }
+
 
 void m_modbus_set_slave(uint8_t ServerID)
 {
@@ -95,11 +107,26 @@ void m_modbus_write_registers(int addr, int nb, const uint16_t *data)
 	modbus_write_registers(ctx, addr, nb, data);
 }
 
-void m_modbus_close(void) 
+void m_modbus_close_and_free(void) 
 {
     modbus_close(ctx);
     modbus_free(ctx);
     ctx = NULL;
+}
+
+int m_modbus_connect(void)
+{
+	return modbus_connect(ctx);
+}
+
+void m_modbus_free(void)
+{
+	modbus_free(ctx);
+}
+
+void m_modbus_close(void)
+{
+	modbus_close(ctx);
 }
 
 void m_modbus_close_and_free_memory(void) 
@@ -109,8 +136,8 @@ void m_modbus_close_and_free_memory(void)
     free(tab_rp_registers);
 
     /* Close the connection */
-    modbus_close(ctx);
-    modbus_free(ctx);
+    m_modbus_close();
+    m_modbus_free();
 }
 
 

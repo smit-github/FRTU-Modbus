@@ -1,9 +1,3 @@
-/*
- * Copyright © 2008-2014 Stéphane Raimbault <stephane.raimbault@gmail.com>
- *
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -90,7 +84,17 @@ int main(int argc, char *argv[])
 	m_modbus_debug(TRUE);
 	m_modbus_set_error_recovery();
 	m_modbus_set_slave(1);
-	m_run_modbus();
+	//m_run_modbus();
+	m_modbus_get_response_timeout_old();
+	if (m_modbus_connect() == -1) 
+	{
+		fprintf(stderr, "Connection failed: %s\n", modbus_strerror(errno));
+		m_modbus_free();
+		return -1;
+	}
+	m_modbus_get_response_timeout_new();
+
+
 
 
 
@@ -99,12 +103,19 @@ int main(int argc, char *argv[])
     /** HOLDING REGISTERS **/
 
 	
-	No_of_IOMs = SeperateCSV();
+//	No_of_IOMs = SeperateCSV();
+
+	No_of_IOMs = fetchCPUHeaderCSVandSeperate(&CPU_Header_data,&IOM_Header_data);
+
+	extract_CDU_MODULE_Data_From_CSV(&s_CPU_MODULE_CSV_Data);
+	extract_CPU_DIAG_Data_From_CSV(&s_CPU_DIAGNOSTIC_DATA);
+
 	printf("No. Of IOMs: %d\n", No_of_IOMs);
 
-	fetchIOMHeaderCSV(&IOM_Header_data);
+	//fetchIOMHeaderCSV(&IOM_Header_data);
 
 	Recognize_IOMs(&IOM_Header_data,No_of_IOMs);
+
 
 	for(i = 0; i< No_of_IOMs; i++)
 	{
@@ -115,11 +126,6 @@ int main(int argc, char *argv[])
 
 		ExtractAsPerIOMType(&IOM_Header_data,i);
 	}
-
-
-
-
-
 
 
 #ifdef TEST_DO

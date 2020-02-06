@@ -31,7 +31,9 @@ int IOM_LineNumber[10] = {0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFFF,0xFFF
 
 string string_to_compare ="Ch-";
 
-		 
+CPU_MODULE_CSV_Data s_CPU_MODULE_CSV_Data;	 
+
+CPU_DIAGNOSTIC_CSV_Data s_CPU_DIAGNOSTIC_DATA;
 
 IOM_DI_CSV_Data  s_DI_DIAGNOSTIC_IOM_DATA,s_DI_CHANNEL_CONFIGURATION_IOM_DATA,S_DI_CHANNEL_DIAGNOSTIC_IOM_DATA;	
 
@@ -147,6 +149,7 @@ IOM_LineNumber[i+1],InputFile_whole,InputFile_whole,i+1);
 			else
 			{
 			 	IOM_status[i] = 0;
+				IOM_LineNumber[i] = 0xFFFF;
 			}
 		}
 	}
@@ -817,6 +820,276 @@ int extract_AI_Data_From_CSV(char IOM_Type, char IOM_Type_of_data,IOM_AI_CSV_Dat
 	return count;	
 }
 
+
+
+
+int extract_CPU_DIAG_Data_From_CSV(CPU_DIAGNOSTIC_CSV_Data *data)
+{
+
+	FILE *fp,*fPtr;
+	char buf[BUFSIZE];
+	char * cmd;
+	int count;	
+	char *token, *p;
+	char * pEnd;
+	uint8_t channel_no;
+	
+	count = 0;
+
+	string_to_compare = malloc(snprintf(NULL,0,"SW-")+1);
+	sprintf(string_to_compare,"SW-");
+	
+	cmd = malloc(snprintf(NULL,0,"csvgrep -c 1 -m \"%s\" CPU02.csv  | sed 1d ",string_to_compare)+1);
+	sprintf(cmd,"csvgrep -c 1 -m \"%s\" CPU02.csv  | sed 1d ",string_to_compare);
+	printf("%s",cmd);
+
+	fp = popen(cmd, "r");
+
+	if (fp == NULL) {
+		printf("Failed to run command\n" );
+		exit(1);
+	}
+
+
+
+			while (fgets(buf, BUFSIZE, fp) != NULL) 
+			{
+
+				printf("%s",buf);
+				p = buf;
+				token = strsep(&p, ",\n");//1st field
+				if(token != NULL)strcpy(data->Name[count], token);
+				token = strsep(&p, ",\n");//2nd field
+				if(token != NULL)data->CASDU1[count] = atoi(token);
+				token = strsep(&p, ",\n");//3rd field
+				if(token != NULL)data->CASDU2[count] = atoi(token);
+				token = strsep(&p, ",\n");//4th field
+				if(token != NULL)data->IOA1[count] = atoi(token);
+				token = strsep(&p, ",\n");//5th field
+				if(token != NULL)data->IOA2[count] = atoi(token);
+				token = strsep(&p, ",\n");//6th field
+				if(token != NULL)data->IOA3[count] = atoi(token);
+				token = strsep(&p, ",\n");//7th field
+				if(token != NULL)data->TI[count] = atoi(token);
+				
+				#ifdef DEBUG
+				//check print
+				printf("DEBUG:\nName:'%s',\n CASDU1:'%d',\n CASDU2:'%d',\n IOA1:'%d',\n IOA2:'%d',\n IOA3:'%d',\n TI:'%d',\n count:%d.\n",
+
+				data->Name[count], 
+				data->CASDU1[count], 
+				data->CASDU2[count], 
+				data->IOA1[count], 
+				data->IOA2[count], 
+				data->IOA3[count], 
+				data->TI[count], 
+				count
+				);
+
+				#endif
+				count++;
+			}
+
+	
+	/* close */
+	pclose(fp);
+
+	return count;	
+}
+
+int extract_CDU_MODULE_Data_From_CSV(CPU_MODULE_CSV_Data *data)
+{
+
+	FILE *fp,*fPtr;
+	char buf[BUFSIZE];
+	char * cmd;
+	int count;	
+	char *token, *p;
+	char * pEnd;
+	uint8_t channel_no;
+	
+	count = 0;
+
+	cmd = malloc(snprintf(NULL,0,"csvcut -c 2 CPU01.csv | sed 1d")+1);
+	sprintf(cmd,"csvcut -c 2 CPU01.csv | sed 1d");
+	printf("%s",cmd);
+
+	fp = popen(cmd, "r");
+
+	if (fp == NULL) {
+		printf("Failed to run command\n" );
+		exit(1);
+	}
+
+
+
+	while (fgets(buf, BUFSIZE, fp) != NULL) 
+	{
+
+		printf("%s",buf);
+		p = buf;
+
+		switch(count)
+		{
+			case 0 :
+			token = strsep(&p, ",\n");//1st field
+			if(token != NULL) 
+			{	
+				data->Own_IP_Address = malloc(strlen(token)+1);
+				strcpy(data->Own_IP_Address, token);			
+			}
+			break;
+			case 1 :
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->Subnet_Mask = malloc(strlen(token)+1);
+				strcpy(data->Subnet_Mask, token);			
+			}
+			break;
+			case 2: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->Default_Gateway = malloc(strlen(token)+1);
+				strcpy(data->Default_Gateway, token);			
+			}
+			break;
+			case 3: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->SNMP_IP_Address = malloc(strlen(token)+1);
+				strcpy(data->SNMP_IP_Address, token);			
+			}
+			break;
+			case 4: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->NTP_Server_IP_Address = malloc(strlen(token)+1);
+				strcpy(data->NTP_Server_IP_Address, token);			
+			}
+			break;
+			case 5: 
+			if(token != NULL) data->Sync_with_Time_in_minute = atoi(token);
+			break;
+			case 6: 
+			if(token != NULL) data->T0 = atoi(token);
+			break;
+			case 7: 
+			if(token != NULL) data->T1 = atoi(token);
+			break;
+			case 8: 
+			if(token != NULL) data->T2 = atoi(token);
+			break;
+			case 9: 
+			if(token != NULL) data->T3 = atoi(token);
+			break;
+			case 10: 
+			if(token != NULL) data->k = atoi(token);
+			break;
+			case 11: 
+			if(token != NULL) data->w = atoi(token);
+			break;
+			case 12: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->Remote_Station_1_IP_Address = malloc(strlen(token)+1);
+				strcpy(data->Remote_Station_1_IP_Address, token);			
+			}
+			break;
+			case 13: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->Remote_Station_2_IP_Address = malloc(strlen(token)+1);
+				strcpy(data->Remote_Station_2_IP_Address, token);			
+			}
+			break;
+			case 14: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->SNMP_Read_Community = malloc(strlen(token)+1);
+				strcpy(data->SNMP_Read_Community, token);			
+			}
+			break;
+			case 15: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->SNMP_Write_Community = malloc(strlen(token)+1);
+				strcpy(data->SNMP_Write_Community, token);			
+			}
+			break;
+			case 16: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->HTTP_Web_Server_User_Name = malloc(strlen(token)+1);
+				strcpy(data->HTTP_Web_Server_User_Name, token);			
+			}
+			break;
+			case 17: 
+			token = strsep(&p, "\n");//2nd field
+			if(token != NULL) 
+			{	
+				data->HTTP_Web_Server_Password = malloc(strlen(token)+1);
+				strcpy(data->HTTP_Web_Server_Password, token);			
+			}
+			break;
+			case 18: 
+			if(token != NULL) data->CASDU1 = atoi(token);
+			break;
+			case 19: 
+			if(token != NULL) data->CASDU2 = atoi(token);
+			break;
+		}
+
+		count++;			
+	}
+
+	#ifdef DEBUG
+	//check print
+	printf("DEBUG:\n Own_IP_Address:'%s', \n Subnet_Mask:'%s',\n Default_Gateway:'%s',\n SNMP_IP_Address:'%s',\n NTP_Server_IP_Address:'%s',\n Sync_with_Time_in_minute:'%d',\n T0:'%d',\n T1:'%d',\n T2:'%d',\n T3:'%d',\n k:'%d',\n w:'%d',\n Remote_Station_1_IP_Address:'%s',\n Remote_Station_2_IP_Address:'%s',\n SNMP_Read_Community:'%s',\n SNMP_Write_Community:'%s',\n HTTP_Web_Server_User_Name:'%s',\n HTTP_Web_Server_Password:'%s',\n CASDU1:'%d',\n CASDU2:'%d',\n count:%d.\n",
+
+	data->Own_IP_Address, 
+	data->Subnet_Mask, 
+	data->Default_Gateway,
+	data->SNMP_IP_Address, 
+	data->NTP_Server_IP_Address, 
+	data->Sync_with_Time_in_minute, 
+	data->T0,
+	data->T1,
+	data->T2,
+	data->T3,
+	data->k,
+	data->w,
+	data->Remote_Station_1_IP_Address,
+	data->Remote_Station_2_IP_Address,
+	data->SNMP_Read_Community,
+	data->SNMP_Write_Community,
+	data->HTTP_Web_Server_User_Name,
+	data->HTTP_Web_Server_Password,
+	data->CASDU1,
+	data->CASDU2,
+
+
+	count
+	);
+
+
+
+	#endif
+
+	
+	/* close */
+	pclose(fp);
+
+	return count;	
+}
 
 
 
