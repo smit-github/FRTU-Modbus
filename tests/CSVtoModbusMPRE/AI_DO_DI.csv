@@ -1,0 +1,136 @@
+Plant Name,Plant Name
+ 
+FRTU
+ 
+PS,Power Supply Module 85-265 VAC / VDC 110-300 (6MD2520-0BA00-0AA0)
+Voltage Input,85-265V AC / 110-300V DC
+Voltage Output,24 V DC/ 2.5A
+ 
+CPU,CPU Module (6MD2521-0AA10-0AA0)
+Own IP Address,192.168.100.171
+Subnet Mask,255.255.255.0
+Default Router (Default Gateway),192.168.100.14
+SNMP IP Address,0.0.0.0
+NTP Server IP Address,0.0.0.0
+Sync with Time in minute,5
+T0,30
+T1,15
+T2,10
+T3,20
+k,12
+w,8
+Remote Station 1,192.168.100.72
+Remote Station 2,192.168.100.54
+SNMP Read Community,public
+SNMP Write Community,private
+HTTP Web Server User Name,siemens
+HTTP Web Server Password,siemens
+CASDU1,255
+CASDU2,255
+CPU Diagnostics
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01 (I/O Card Timeout),255,255,255,255,255,1
+SW-02 (I/O Card Configuration Mismatch),255,255,255,255,255,1
+SW-03 (RAM Checksum Error),255,255,255,255,255,1
+SW-04 (NTP Timeout),255,255,255,255,255,1
+SW-05 (Board Healthy),255,255,255,255,255,1
+SW-06 (Remote Station 1 Connection),255,255,255,255,255,1
+SW-07 (Remote Station 2 Connection),255,255,255,255,255,1
+ 
+IOM 01: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0)
+I/O Module Diagnostics
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01 (Board Healthy),255,255,255,255,255,1
+SW-02 (RAM Checksum Error),255,255,255,255,255,1
+SW-03 (ADC Error),255,255,255,255,255,1
+
+Channelwise Configuration
+AI Voltage Value
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,Zero range,thresh_additive,thresh_uncond,block,Y_0%,Y_100%,MV_conv_free_Xl,zero_range_Xzu,zero_range_Xzl,zero_range_Yz,Longtext
+Ch-01,255,255,255,255,255,9,0,150.0,2.00,0,-32000.00,32000.00,-103.00,5.00,-5.00,0.00,Channel 1
+Ch-03,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 3
+Ch-05,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 5
+Ch-06,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 6
+Ch-07,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 7
+Ch-08,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 8
+AI Current Value
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,Zero range,thresh_additive,thresh_uncond,block,Y_0%,Y_100%,MV_conv_free_Xl,zero_range_Xzu,zero_range_Xzl,zero_range_Yz,Longtext
+Ch-02,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 2
+Ch-04,255,255,255,255,255,11,0,150.0,2.00,0,-32000.0,32000.0,-103.00,5.00,-5.00,0.00,Channel 4
+ 
+IOM 02: DI-02(16-Ch),Binary Input Module 110 VDC / 220VDC (6MD2523-0BA00-0AA0)
+I/O Module Diagnostics
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01 (Board Healthy),255,255,255,255,255,1
+SW-02 (RAM Checksum Error),255,255,255,255,255,1
+SW-03 (Auxillary Voltage (AUX V1) Error),255,255,255,255,255,1
+SW-04 (Auxillary Voltage (AUX V2) Error),255,255,255,255,255,1
+
+Channelwise Configuration
+DI-Single Point Information
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,Inversion,block,Flutt_Number,Flutt_dp_qds,Flutt_t,SW_Filter_t,State_of_flutter_information,Longtext
+Ch-01,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 1
+Ch-02,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 2
+Ch-03,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 3
+Ch-04,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 4
+Ch-05,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 5
+Ch-06,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 6
+Ch-07,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 7
+Ch-08,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 8
+Ch-09,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 9
+Ch-10,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 10
+Ch-11,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 11
+Ch-12,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 12
+Ch-13,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 13
+Ch-14,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 14
+Ch-15,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 15
+Ch-16,255,255,255,255,255,30,0,0,1,0,0,0,0,Channel 16
+Channelwise Diagnostics
+Channel Name ,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+Ch-01,255,255,255,255,255,1
+Ch-02,255,255,255,255,255,1
+Ch-03,255,255,255,255,255,1
+Ch-04,255,255,255,255,255,1
+Ch-05,255,255,255,255,255,1
+Ch-06,255,255,255,255,255,1
+Ch-07,255,255,255,255,255,1
+Ch-08,255,255,255,255,255,1
+Ch-09,255,255,255,255,255,1
+Ch-10,255,255,255,255,255,1
+Ch-11,255,255,255,255,255,1
+Ch-12,255,255,255,255,255,1
+Ch-13,255,255,255,255,255,1
+Ch-14,255,255,255,255,255,1
+Ch-15,255,255,255,255,255,1
+Ch-16,255,255,255,255,255,1
+ 
+IOM 03: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0)
+I/O Module Diagnostics
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01 (Board Healthy),255,255,255,255,255,1
+SW-02 (RAM Checksum Error),255,255,255,255,255,1
+
+Channelwise Configuration
+Digital Output Double Command (TI 46)
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,select_execute_t,output_t_0,output_t_1,Default on Time,ON before OFF,Longtext
+Ch-01,255,255,255,255,255,3,0,1,1,1,0,Channel 1
+Ch-02,255,255,255,255,255,3,0,1,1,1,0,Channel 1
+Digital Output Single Command (TI 45)
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,select_execute_t,output_t_0,output_t_1,Default on Time,ON before OFF,Longtext
+Ch-03,255,255,255,255,255,1,0,1,1,1,0,Channel 3
+Ch-04,255,255,255,255,255,1,0,1,1,1,0,Channel 4
+Ch-05,255,255,255,255,255,1,0,1,1,1,0,Channel 5
+Ch-06,255,255,255,255,255,1,0,1,1,1,0,Channel 6
+Ch-07,255,255,255,255,255,1,0,1,1,1,0,Channel 7
+Ch-08,255,255,255,255,255,1,0,1,1,1,0,Channel 8
+Channelwise Diagnostics
+Channel Name ,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+Ch-01,255,255,255,255,255,1
+Ch-02,255,255,255,255,255,1
+Ch-03,255,255,255,255,255,1
+Ch-04,255,255,255,255,255,1
+Ch-05,255,255,255,255,255,1
+Ch-06,255,255,255,255,255,1
+Ch-07,255,255,255,255,255,1
+Ch-08,255,255,255,255,255,1
+ 

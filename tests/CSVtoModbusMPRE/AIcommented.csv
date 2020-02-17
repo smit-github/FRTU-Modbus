@@ -1,0 +1,22 @@
+,,,,,,,,,,,,,,,,,,
+IOM 01: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0),1,,,,,,,,,,,,,,,,
+I/O Module Diagnostics,,,,,,,,,,,,,,,,,,
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,,,,,,,,,,,,
+SW-01 (Board Healthy),255,255,255,255,255,1,,,,,,,,,,,,
+SW-02 (RAM Checksum Error),255,255,255,255,255,1,,,,,,,,,,,,
+SW-03 (ADC Error),255,255,255,255,255,1,,,,,,,,,,,,
+SW-04 (Card Configuration),0,0,0,0,0,0,,,,,,,,,,,,
+SW-04 (Card Configuration),0,0,0,2,0,1,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+Channelwise Configuration,,,,,,,,,,,,,,,,,,
+AI Voltage Value,,,,,,,,,,,,,,,,,,
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,Zero range,thresh_additive,thresh_uncond,block,Y_0%,Y_100%,MV_conv_free_Xl,zero_range_Xzu,zero_range_Xzl,zero_range_Yz,Longtext,Input Type
+Ch-01,1,0,1,0,0,9,0,50,0,0,-1000,1000,-103,100,-100,-30000,Channel 1,0
+Ch-02,1,0,2,0,0,11,1,100,25,0,0,1000,-80,75,-75,-6000,Channel 2,1
+Ch-03,1,0,3,0,0,13,0,150,50,0,-32000,32000,-20,60,-60,-150,Channel 3,2
+Ch-04,1,0,4,0,0,34,1,200,99,0,0,32000,0,45,-45,0,Channel 4,3
+Ch-05,1,0,5,0,0,35,0,550,100,0,-3000,3000,50,5,-5,500,Channel 5,8
+Ch-06,1,0,6,0,0,36,1,750,101,0,0,3000,60,25,-25,1000,Channel 6,9
+Ch-07,1,0,7,0,0,11,0,150,102,0,0,256,80,15,-15,20000,Channel 7,10
+Ch-08,1,0,8,0,0,11,1,1000,103,1,-256,256,103,103,-103,32000,Channel 8,1
+ ,,,,,,,,,,,,,,,,,,

@@ -1,0 +1,7 @@
+I/O Module Diagnostics,,,,,,,,,,,,,,,,,
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,,,,,,,,,,,
+SW-01 (Board Healthy),255,255,255,255,255,1,,,,,,,,,,,
+SW-02 (RAM Checksum Error),255,255,255,255,255,1,,,,,,,,,,,
+SW-03 (Auxillary Voltage (AUX V1) Error),255,255,255,255,255,1,,,,,,,,,,,
+SW-04 (Auxillary Voltage (AUX V2) Error),255,255,255,255,255,1,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
