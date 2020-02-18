@@ -1,12 +1,14 @@
-9:CPU,CPU Module (6MD2521-0AA10-0AA0),,,,,,,,,,,,,,,,
-30:CPU Diagnostics,,,,,,,,,,,,,,,,,
-49:IOM 01: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0),1,,,,,,,,,,,,,,,
-68:IOM 02: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0),2,,,,,,,,,,,,,,,
-87:IOM 03: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0),3,,,,,,,,,,,,,,,
-115:IOM 04: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0),4,,,,,,,,,,,,,,,
-143:IOM 05: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0),5,,,,,,,,,,,,,,,
-171:IOM 06: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0),6,,,,,,,,,,,,,,,
-199:IOM 07: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0),7,,,,,,,,,,,,,,,
-245:IOM 08: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0),8,,,,,,,,,,,,,,,
-291:IOM 09: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0),9,,,,,,,,,,,,,,,
-337:IOM 10: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0),10,,,,,,,,,,,,,,,
+9:CPU,CPU Module (6MD2521-0AA10-0AA0)
+30:CPU Diagnostics
+40:IOM 01: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0)
+86:IOM 02: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0)
+114:IOM 03: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0)
+160:IOM 04: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0)
+188:IOM 05: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0)
+234:IOM 06: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0)
+262:IOM 07: DI-01(16-Ch),Binary Input Module 24 VDC / 48 VDC (6MD2523-0AA00-0AA0)
+308:IOM 08: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0)
+336:IOM 09: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0)
+355:IOM 10: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0)
+374:M:PRE 2
+481:M:PRE 1

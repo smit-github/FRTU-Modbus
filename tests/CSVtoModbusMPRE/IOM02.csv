@@ -1,19 +1,28 @@
-IOM 02: AI-01(8-Ch),Analog Input Module (6MD2525-0AA00-0AA0),2,,,,,,,,,,,,,,,
-I/O Module Diagnostics,,,,,,,,,,,,,,,,,
-Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,,,,,,,,,,,
-SW-01 (Board Healthy),255,255,255,255,255,1,,,,,,,,,,,
-SW-02 (RAM Checksum Error),255,255,255,255,255,1,,,,,,,,,,,
-SW-03 (ADC Error),255,255,255,255,255,1,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-Channelwise Configuration,,,,,,,,,,,,,,,,,
-AI Voltage Value,,,,,,,,,,,,,,,,,
-Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,Zero range,thresh_additive,thresh_uncond,block,Y_0%,Y_100%,MV_conv_free_Xl,zero_range_Xzu,zero_range_Xzl,zero_range_Yz,Longtext
-Ch-01,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 1
-Ch-02,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 2
-Ch-03,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 3
-Ch-04,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 4
-Ch-05,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 5
-Ch-06,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 6
-Ch-07,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 7
-Ch-08,255,255,255,255,255,11,0,150,2,0,-32000,32000,-103,5,-5,0,Channel 8
- ,,,,,,,,,,,,,,,,,
+IOM 02: DO-01(8-Ch),Binary Output Module (6MD2524-0AA00-0AA0)
+I/O Module Diagnostics
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01 (Board Healthy),255,255,255,255,255,1
+SW-02 (RAM Checksum Error),255,255,255,255,255,1
+
+Channelwise Configuration
+Digital Output Single Command (TI 45)
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,select_execute_t,output_t_0,output_t_1,Default on Time,ON before OFF,Longtext
+Ch-01,255,255,255,255,255,1,1000,1,1,1,0,Channel 1
+Ch-02,255,255,255,255,255,1,1000,1,1,1,0,Channel 2
+Ch-03,255,255,255,255,255,1,1000,1,1,1,0,Channel 3
+Ch-04,255,255,255,255,255,1,1000,1,1,1,0,Channel 4
+Ch-05,255,255,255,255,255,1,1000,1,1,1,0,Channel 5
+Ch-06,255,255,255,255,255,1,1000,1,1,1,0,Channel 6
+Ch-07,255,255,255,255,255,1,1000,1,1,1,0,Channel 7
+Ch-08,255,255,255,255,255,1,1000,1,1,1,0,Channel 8
+Channelwise Diagnostics
+Channel Name ,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+Ch-01,255,255,255,255,255,1
+Ch-02,255,255,255,255,255,1
+Ch-03,255,255,255,255,255,1
+Ch-04,255,255,255,255,255,1
+Ch-05,255,255,255,255,255,1
+Ch-06,255,255,255,255,255,1
+Ch-07,255,255,255,255,255,1
+Ch-08,255,255,255,255,255,1
+ 

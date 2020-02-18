@@ -1,19 +1,10 @@
-CPU Diagnostics,,,,,,,,,,,,,,,,,
-Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI,,,,,,,,,,,
-SW-01 (I/O Card Timeout),255,255,255,255,255,1,,,,,,,,,,,
-SW-02 (I/O Card Configuration Mismatch),255,255,255,255,255,1,,,,,,,,,,,
-SW-03 (RAM Checksum Error),255,255,255,255,255,1,,,,,,,,,,,
-SW-04 (NTP Timeout),255,255,255,255,255,1,,,,,,,,,,,
-SW-05 (Board Healthy),255,255,255,255,255,1,,,,,,,,,,,
-SW-06 (Remote Station 1 Connection),255,255,255,255,255,1,,,,,,,,,,,
-SW-07 (Remote Station 2 Connection),255,255,255,255,255,1,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
+CPU Diagnostics
+Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01 (I/O Card Timeout),255,255,255,255,255,1
+SW-02 (I/O Card Configuration Mismatch),255,255,255,255,255,1
+SW-03 (RAM Checksum Error),255,255,255,255,255,1
+SW-04 (NTP Timeout),255,255,255,255,255,1
+SW-05 (Board Healthy),255,255,255,255,255,1
+SW-06 (Remote Station 1 Connection),255,255,255,255,255,1
+SW-07 (Remote Station 2 Connection),255,255,255,255,255,1
+ 

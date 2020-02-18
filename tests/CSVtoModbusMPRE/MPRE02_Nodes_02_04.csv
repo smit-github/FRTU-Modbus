@@ -1,0 +1,4 @@
+Receive Measured Value Without Processing
+Name,CASDU1,CASDU2,Function Code,IOA1,IOA2,IOA3,modbus Address,Station Number,TI,Description
+Ch-02,255,255,3,255,255,255,65535,255,11,
+ 

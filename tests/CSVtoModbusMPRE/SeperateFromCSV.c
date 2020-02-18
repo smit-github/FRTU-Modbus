@@ -224,8 +224,6 @@ void fetchCPUHeaderCSVandSeperate(CPU_Header_CSV_Data* data,IOM_Header_CSV_Data*
 	NoOfData->NoOfNodesForMPRE[1]  = 0;
 	NoOfData->NoOfNodesForMPRE_Available[1]  = 0;
 
-
-
 	cmd = malloc(snprintf(NULL,0," grep -n -e \"IOM\" -e \"CPU\" -e \"M:PRE\" %s.csv  > Header_text.csv",InputFile_CSV)+1);
 	sprintf(cmd,"grep -n -e \"IOM\" -e \"CPU\" -e \"M:PRE\" %s.csv  > Header_text.csv",InputFile_CSV);
 	if (system(cmd) == 256) 
@@ -480,11 +478,11 @@ void fetchNodesandSeperate(MPRE_Header_CSV_Data* MPREdata, MPRE_Nodes_Header_CSV
 	DataAvailablity->NoOfNodesForMPRE_Available[NoOfMPRES]=0;
 	DataAvailablity->NoOfNodesForMPRE[NoOfMPRES]=0;
 
-	cmd = malloc(snprintf(NULL,0," grep -n -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\"  -e \"%s\"  -e \"%s\"  -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" %s%02d.csv  > Nodes_Header_text.csv", Node_Strings[0], Node_Strings[1], Node_Strings[2], Node_Strings[3], Node_Strings[4], Node_Strings[5], Node_Strings[6], Node_Strings[7], Node_Strings[8], Node_Strings[9], Node_Strings[10], Node_Strings[11], Node_Strings[12], Node_Strings[13], Node_Strings[14], Node_Strings[15], Node_Strings[16], Node_Strings[17], Node_Strings[18], Node_Strings[19],"MPRE",NoOfMPRES+1)+1);
+	cmd = malloc(snprintf(NULL,0," grep -own -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\"  -e \"%s\"  -e \"%s\"  -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" %s%02d.csv  > Nodes_Header_text.csv", Node_Strings[0], Node_Strings[1], Node_Strings[2], Node_Strings[3], Node_Strings[4], Node_Strings[5], Node_Strings[6], Node_Strings[7], Node_Strings[8], Node_Strings[9], Node_Strings[10], Node_Strings[11], Node_Strings[12], Node_Strings[13], Node_Strings[14], Node_Strings[15], Node_Strings[16], Node_Strings[17], Node_Strings[18], Node_Strings[19],"MPRE",NoOfMPRES+1)+1);
 
 
 
-	sprintf(cmd," grep -n -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\"  -e \"%s\"  -e \"%s\"  -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" %s%02d.csv  > Nodes_Header_text.csv", Node_Strings[0], Node_Strings[1], Node_Strings[2], Node_Strings[3], Node_Strings[4], Node_Strings[5], Node_Strings[6], Node_Strings[7], Node_Strings[8], Node_Strings[9], Node_Strings[10], Node_Strings[11], Node_Strings[12], Node_Strings[13], Node_Strings[14], Node_Strings[15], Node_Strings[16], Node_Strings[17], Node_Strings[18], Node_Strings[19],"MPRE",NoOfMPRES+1);
+	sprintf(cmd," grep -own -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\"  -e \"%s\"  -e \"%s\"  -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" %s%02d.csv  > Nodes_Header_text.csv", Node_Strings[0], Node_Strings[1], Node_Strings[2], Node_Strings[3], Node_Strings[4], Node_Strings[5], Node_Strings[6], Node_Strings[7], Node_Strings[8], Node_Strings[9], Node_Strings[10], Node_Strings[11], Node_Strings[12], Node_Strings[13], Node_Strings[14], Node_Strings[15], Node_Strings[16], Node_Strings[17], Node_Strings[18], Node_Strings[19],"MPRE",NoOfMPRES+1);
 
 #ifdef TEST
 		printf("%s",cmd);
@@ -603,11 +601,11 @@ void fetchNodesParametersandSeperate(uint8_t Node_number,uint8_t MPREChannelNo)
 	uint8_t channel_no,NoOfNodes =0,NoOfMPRE = 0;
 
 
-	cmd = malloc(snprintf(NULL,0," grep -n -e \"%s,\" -e \"%s,\" -e \"%s,\" -e \"%s,\" MPRE%02d_Nodes_%02d.csv > NodesParameter_Header_text.csv", string_MPER_Nodes[0], string_MPER_Nodes[1], string_MPER_Nodes[2], string_MPER_Nodes[3], MPREChannelNo+1, Node_number+1)+1);
+	cmd = malloc(snprintf(NULL,0," grep -own -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" MPRE%02d_Nodes_%02d.csv > NodesParameter_Header_text.csv", string_MPER_Nodes[0], string_MPER_Nodes[1], string_MPER_Nodes[2], string_MPER_Nodes[3], MPREChannelNo+1, Node_number+1)+1);
 
 
 
-	sprintf(cmd," grep -n -e \"%s,\" -e \"%s,\" -e \"%s,\" -e \"%s,\" MPRE%02d_Nodes_%02d.csv  > NodesParameter_Header_text.csv",string_MPER_Nodes[0],string_MPER_Nodes[1], string_MPER_Nodes[2], string_MPER_Nodes[3],MPREChannelNo+1, Node_number+1);
+	sprintf(cmd," grep -own -e \"%s\" -e \"%s\" -e \"%s\" -e \"%s\" MPRE%02d_Nodes_%02d.csv  > NodesParameter_Header_text.csv",string_MPER_Nodes[0],string_MPER_Nodes[1], string_MPER_Nodes[2], string_MPER_Nodes[3],MPREChannelNo+1, Node_number+1);
 
 
 	if (system(cmd) == 256) 

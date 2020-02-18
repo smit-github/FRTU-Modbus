@@ -1,0 +1,3 @@
+Receive Binary Value
+Name,CASDU1,CASDU2,Function Code,IOA1,IOA2,IOA3,Modbus Address,Station Number,TI,Description
+Ch-01,255,255,1,255,255,255,65535,255,1,

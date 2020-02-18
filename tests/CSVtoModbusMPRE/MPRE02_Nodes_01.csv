@@ -1,0 +1,16 @@
+Node-01
+Node Diagnostics
+ Name,CASDU1,CASDU2,IOA1,IOA2,IOA3,TI
+SW-01,255,255,255,255,255,1
+
+Node Channel Configuration
+Receive Measured Value
+Name,CASDU1,CASDU2,Function Code,IOA1,IOA2,IOA3,Modbus Address,Thresh Additive,Thresh Uncond,Station_Number,TI,X_0 Per,X_100 Per,Y_0 Per,Y_100 Per,Description
+Ch-01,255,255,3,255,255,255,65535,50.0,10.00,255,11,0,10000,0,20000,
+Receive Binary Value
+Name,CASDU1,CASDU2,Function Code,IOA1,IOA2,IOA3,Modbus Address,Station Number,TI,Description
+Ch-02,255,255,1,255,255,255,65535,255,1,
+Receive Measured Value Without Processing
+Name,CASDU1,CASDU2,Function Code,IOA1,IOA2,IOA3,modbus Address,Station Number,TI,Description
+Ch-03,255,255,3,255,255,255,65535,255,11,
+ 
